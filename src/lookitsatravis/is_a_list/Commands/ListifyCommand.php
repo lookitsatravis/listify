@@ -76,15 +76,15 @@ class ListifyCommand extends Command {
 	 */
 	public function createMigration()
 	{
-		$table_name = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->argument('table'))));
-		$data = ['table' => $table_name];
+		$targetTableClassName = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->argument('table'))));
+		$data = ['targetTableClassName' => $targetTableClassName, 'tableName' => strtolower($this->argument('table'))];
 		$prefix = date('Y_m_d_His');
 		$path = app_path() . '/database/migrations';
 
 		if (!is_dir($path)) mkdir($path);
 
-		$fileName  = $path . '/' . $prefix . '_add_position_to_' . $data['table'] . '_table.php';
-		$data['className'] = 'AddPositionTo' . $data['table'] . 'Table';
+		$fileName  = $path . '/' . $prefix . '_add_position_to_' . $data['tableName'] . '_table.php';
+		$data['className'] = 'AddPositionTo' . $data['targetTableClassName'] . 'Table';
 
 		// Save the new migration to disk using the stapler migration view.
 		$migration = View::make('is_a_list::migration', $data)->render();

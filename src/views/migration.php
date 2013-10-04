@@ -12,7 +12,7 @@ class <?= $className ?> extends Migration {
 	 */
 	public function up()
 	{	
-		Schema::table('<?= $table ?>', function(Blueprint $table) {		
+		Schema::table('<?= $tableName ?>', function(Blueprint $table) {		
 			
 			$table->integer("position");
 
@@ -27,7 +27,7 @@ class <?= $className ?> extends Migration {
 	 */
 	public function down()
 	{
-		Schema::table('<?= $table ?>', function(Blueprint $table) {
+		Schema::table('<?= $tableName ?>', function(Blueprint $table) {
 
 			$table->dropColumn("position");
 

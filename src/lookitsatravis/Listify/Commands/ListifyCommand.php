@@ -89,7 +89,7 @@ class ListifyCommand extends Command {
 		$targetColumnClassName = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->argument('column'))));
 		$data = [
 			'targetTableClassName' => $targetTableClassName,
-			'targetColumnClassName' => $targetColumnClassName;
+			'targetColumnClassName' => $targetColumnClassName,
 			'tableName' => strtolower($this->argument('table')),
 			'columnName' => strtolower($this->argument('column'))
 		];

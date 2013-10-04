@@ -1,9 +1,8 @@
-<?php namespace lookitsatravis\is_a_list;
+<?php namespace lookitsatravis\Listify;
 
 use Illuminate\Support\ServiceProvider;
-use Codesleeve\Stapler\File\UploadedFile;
 
-class ListServiceProvider extends ServiceProvider {
+class ListifyServiceProvider extends ServiceProvider {
 
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -19,7 +18,7 @@ class ListServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('lookitsatravis/is_a_list');
+		$this->package('lookitsatravis/Listify');
 	}
 
 	/**

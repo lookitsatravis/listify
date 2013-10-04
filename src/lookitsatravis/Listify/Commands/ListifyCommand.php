@@ -1,4 +1,4 @@
-<?php namespace lookitsatravis\is_a_list\Commands;
+<?php namespace lookitsatravis\Listify\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -40,7 +40,15 @@ class ListifyCommand extends Command {
 	{
 		try {
 			DB::table($this->argument('table'))->first();
-			$this->createMigration();
+
+			if (!Schema::hasColumn($this->argument('table'), $this->argument('column')))
+			{
+			    $this->createMigration();
+			}
+			else
+			{
+				$this->error("Table already contains a column called " . $this->argument('column'));
+			}
 
 		} catch(Exception $e) {
 			$this->error("No such table found in database: " . $this->argument('table'));
@@ -55,7 +63,8 @@ class ListifyCommand extends Command {
 	protected function getArguments()
 	{
 		return array(
-			array('table', InputArgument::REQUIRED, 'The name of the database table the position field will be added to.'),
+			array('table', InputArgument::REQUIRED, 'The name of the database table the Listify field will be added to.'),
+			array('column', InputArgument::OPTIONAL, 'The name of the column to be used by Listify.', 'position')
 		);
 	}
 
@@ -77,17 +86,24 @@ class ListifyCommand extends Command {
 	public function createMigration()
 	{
 		$targetTableClassName = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->argument('table'))));
-		$data = ['targetTableClassName' => $targetTableClassName, 'tableName' => strtolower($this->argument('table'))];
+		$targetColumnClassName = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->argument('column'))));
+		$data = [
+			'targetTableClassName' => $targetTableClassName,
+			'targetColumnClassName' => $targetColumnClassName;
+			'tableName' => strtolower($this->argument('table')),
+			'columnName' => strtolower($this->argument('column'))
+		];
+
 		$prefix = date('Y_m_d_His');
 		$path = app_path() . '/database/migrations';
 
 		if (!is_dir($path)) mkdir($path);
 
-		$fileName  = $path . '/' . $prefix . '_add_position_to_' . $data['tableName'] . '_table.php';
-		$data['className'] = 'AddPositionTo' . $data['targetTableClassName'] . 'Table';
+		$fileName  = $path . '/' . $prefix . '_add_' . $data['columnName'] . '_to_' . $data['tableName'] . '_table.php';
+		$data['className'] = 'Add' . $data['targetColumnClassName'] . 'To' . $data['targetTableClassName'] . 'Table';
 
 		// Save the new migration to disk using the stapler migration view.
-		$migration = View::make('is_a_list::migration', $data)->render();
+		$migration = View::make('listify::migration', $data)->render();
 		File::put($fileName, $migration);
 		
 		// Dump the autoloader and print a created migration message to the console.

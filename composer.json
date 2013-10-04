@@ -1,6 +1,6 @@
 {
-    "name": "lookitsatravis/is_a_list",
-    "description": "Easy file attachment management using Eloquent in Laravel 4",
+    "name": "lookitsatravis/Listify",
+    "description": "Turn any model into a list!",
     "keywords": ["laravel", "model", "list", "position", "acts_as_list", "rails", "list"],
     "license": "MIT",
     "authors": [
@@ -18,7 +18,7 @@
             "src/migrations"
         ],
         "psr-0": {
-            "lookitsatravis\\is_a_list": "src/"
+            "lookitsatravis\\Listify": "src/"
         }
     },
     "minimum-stability": "dev"

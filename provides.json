@@ -1,6 +1,6 @@
 {
   "providers": [
-    "lookitsatravis\is_a_list\ListServiceProvider",
+    "lookitsatravis\Listify\ListifyServiceProvider",
   ],
   "aliases" : [
   ]

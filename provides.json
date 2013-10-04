@@ -1,0 +1,7 @@
+{
+  "providers": [
+    "lookitsatravis\is_a_list\ListServiceProvider",
+  ],
+  "aliases" : [
+  ]
+}

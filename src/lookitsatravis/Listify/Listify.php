@@ -422,7 +422,7 @@ trait Listify
         $item = $this->bottomItem($except);
 
         if($item)
-            return $item->position;
+            return $item->getListifyPosition();
         else
             return static::listifyTop() - 1;
     }

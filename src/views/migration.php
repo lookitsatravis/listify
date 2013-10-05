@@ -14,7 +14,7 @@ class <?= $className ?> extends Migration {
 	{	
 		Schema::table('<?= $tableName ?>', function(Blueprint $table) {		
 			
-			$table->integer("<? $columnName ?>");
+			$table->integer("<? $columnName ?>")->nullable();
 
 		});
 

@@ -28,9 +28,9 @@ class ListifyServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{	
-		$this->registerListify();
+		$this->registerListifyAttach();
 
-		$this->commands('listify');
+		$this->commands('listify.attach');
 	}
 
 	/**
@@ -38,11 +38,11 @@ class ListifyServiceProvider extends ServiceProvider {
 	 * 
 	 * @return void
 	 */
-	protected function registerListify()
+	protected function registerListifyAttach()
 	{
-		$this->app->bind('listify', function($app) 
+		$this->app->bind('listify.attach', function($app) 
 		{
-			return new Commands\ListifyCommand;
+			return new Commands\AttachCommand;
 		});
 	}
 

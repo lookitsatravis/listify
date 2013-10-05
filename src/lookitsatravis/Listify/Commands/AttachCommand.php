@@ -5,14 +5,14 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use DB, View, File, Schema;
 
-class ListifyCommand extends Command {
+class AttachCommand extends Command {
 
 	/**
 	 * The console command name.
 	 *
 	 * @var string
 	 */
-	protected $name = 'listify';
+	protected $name = 'listify:attach';
 
 	/**
 	 * The console command description.

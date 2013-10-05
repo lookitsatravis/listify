@@ -197,6 +197,16 @@ trait Listify
         return static::$listifyConfig['add_new_at'];
     }
 
+    public function getListifyPosition()
+    {
+        return $this->getAttribute($this->positionColumn());
+    }
+
+    public function setListPosition($position)
+    {
+        $this->setAttribute($this->positionColumn(), $position);
+    }
+
     // Insert the item at the given position (defaults to the top position of 1).
     public function insertAt($position = NULL)
     {
@@ -277,21 +287,21 @@ trait Listify
     public function incrementPosition()
     {
         if($this->isNotInList()) return NULL;
-        $this->setListPosition($this->position + 1);
+        $this->setListPosition($this->getListifyPosition() + 1);
     }
 
     // Decrease the position of this item without adjusting the rest of the list.
     public function decrementPosition()
     {
         if($this->isNotInList()) return NULL;
-        $this->setListPosition($this->position - 1);
+        $this->setListPosition($this->getListifyPosition() - 1);
     }
 
     // Return +true+ if this object is the first in the list.
     public function isFirst()
     {
         if($this->isNotInList()) return FALSE;
-        if($this->position == static::listifyTop()) return TRUE;
+        if($this->getListifyPosition() == static::listifyTop()) return TRUE;
         return FALSE;
     }
 
@@ -299,7 +309,7 @@ trait Listify
     public function isLast()
     {
         if($this->isNotInList()) return FALSE;
-        if($this->position == $this->bottomPositionInList()) return TRUE;
+        if($this->getListifyPosition() == $this->bottomPositionInList()) return TRUE;
         return FALSE;
     }
 
@@ -309,7 +319,7 @@ trait Listify
         if($this->isNotInList()) return NULL;
 
         return App::make($this->listifyClass())
-            ->whereRaw($this->scopeCondition() . " AND " . $this->positionColumn() . " < " . $this->position)
+            ->whereRaw($this->scopeCondition() . " AND " . $this->positionColumn() . " < " . $this->getListifyPosition())
             ->orderBy($this->getTable() . "." . $this->positionColumn(), "DESC")
             ->first();
     }
@@ -319,7 +329,7 @@ trait Listify
     public function higherItems($limit = NULL)
     {
         if($limit === NULL) $limit = $this->listifyList()->count();
-        $position_value = $this->position;
+        $position_value = $this->getListifyPosition();
 
         return $this->listifyList()
             ->where($this->positionColumn(), "<", $position_value)
@@ -335,7 +345,7 @@ trait Listify
         if($this->isNotInList()) return NULL;
 
         return App::make($this->listifyClass())
-            ->whereRaw($this->scopeCondition() . " AND " . $this->positionColumn() . " > " . $this->position)
+            ->whereRaw($this->scopeCondition() . " AND " . $this->positionColumn() . " > " . $this->getListifyPosition())
             ->orderBy($this->getTable() . "." . $this->positionColumn(), "ASC")
             ->first();
     }
@@ -345,7 +355,7 @@ trait Listify
     public function lowerItems($limit = NULL)
     {
         if($limit === NULL) $limit = $this->listifyList()->count();
-        $position_value = $this->position;
+        $position_value = $this->getListifyPosition();
 
         return $this->listifyList()
             ->where($this->positionColumn(), '>', $position_value)
@@ -362,7 +372,7 @@ trait Listify
 
     public function isNotInList()
     {
-        return $this->position === NULL;
+        return $this->getListifyPosition() === NULL;
     }
 
     public function defaultPosition()
@@ -372,13 +382,13 @@ trait Listify
 
     public function isDefaultPosition()
     {
-        return $this->defaultPosition() == $this->position;
+        return $this->defaultPosition() == $this->getListifyPosition();
     }
 
     // Sets the new position and saves it
     public function setListPosition($new_position)
     {
-        $this->position = $new_position;
+        $this->setListifyPosition($new_position);
         $this->save();
     }
 
@@ -394,15 +404,15 @@ trait Listify
     private function addToListTop()
     {
         $this->incrementPositionsOnAllItems();
-        $this->position = static::listifyTop();
+        $this->setListifyPosition(static::listifyTop());
     }
 
     private function addToListBottom()
     {
         if($this->isNotInList() || $this->isDefaultPosition())
-            $this->position = $this->bottomPositionInList() + 1;
+            $this->setListifyPosition($this->bottomPositionInList() + 1);
         else
-            $this->incrementPositionsOnLowerItems($this->position);
+            $this->incrementPositionsOnLowerItems($this->getListifyPosition());
     }
 
     // Returns the bottom position number in the list.
@@ -462,7 +472,7 @@ trait Listify
     private function decrementPositionsOnLowerItems($position = NULL)
     {
         if($this->isNotInList()) return NULL;
-        if($position === NULL) $position = $this->position;
+        if($position === NULL) $position = $this->getListifyPosition();
 
         DB::table($this->getTable())
            ->whereRaw($this->scopeCondition() . ' AND ' . $this->positionColumn() . ' > ' . $position)
@@ -475,7 +485,7 @@ trait Listify
         if($this->isNotInList()) return NULL;
 
         DB::table($this->getTable())
-           ->whereRaw($this->scopeCondition() . " AND " . $this->positionColumn() . ' < ' . $this->position)
+           ->whereRaw($this->scopeCondition() . " AND " . $this->positionColumn() . ' < ' . $this->getListifyPosition())
            ->increment($this->positionColumn());
     }
 
@@ -531,7 +541,7 @@ trait Listify
     {
         if($this->isInList())
         {
-            $old_position = $this->position;
+            $old_position = $this->getListifyPosition();
             if($position == $old_position) return;
 
             $this->shufflePositionsOnIntermediateItems($old_position, $position);
@@ -549,7 +559,7 @@ trait Listify
     {
         if($this->isInList())
         {
-            $old_position = $this->position;
+            $old_position = $this->getListifyPosition();
             $this->setListPosition(0);
             $this->decrementPositionsOnLowerItems($old_position);
         }
@@ -558,7 +568,7 @@ trait Listify
     private function updatePositions()
     {
         $old_position = $this->getOriginal()['position'];
-        $new_position = $this->position;
+        $new_position = $this->getListifyPosition();
 
         if($new_position === NULL)
             $matching_position_records = 0;

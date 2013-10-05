@@ -14,7 +14,7 @@ class <?= $className ?> extends Migration {
 	{	
 		Schema::table('<?= $tableName ?>', function(Blueprint $table) {		
 			
-			$table->integer("<? $columnName ?>")->nullable();
+			$table->integer("<?= $columnName ?>")->nullable();
 
 		});
 
@@ -29,7 +29,7 @@ class <?= $className ?> extends Migration {
 	{
 		Schema::table('<?= $tableName ?>', function(Blueprint $table) {
 
-			$table->dropColumn("<? $columnName ?>");
+			$table->dropColumn("<?= $columnName ?>");
 
 		});
 	}

@@ -3,7 +3,7 @@
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use DB, View, File;
+use DB, View, File, Schema;
 
 class ListifyCommand extends Command {
 
@@ -103,7 +103,7 @@ class ListifyCommand extends Command {
 		$data['className'] = 'Add' . $data['targetColumnClassName'] . 'To' . $data['targetTableClassName'] . 'Table';
 
 		// Save the new migration to disk using the stapler migration view.
-		$migration = View::make('listify::migration', $data)->render();
+		$migration = View::make('Listify::migration', $data)->render();
 		File::put($fileName, $migration);
 		
 		// Dump the autoloader and print a created migration message to the console.

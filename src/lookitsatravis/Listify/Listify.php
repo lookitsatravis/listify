@@ -202,7 +202,7 @@ trait Listify
         return $this->getAttribute($this->positionColumn());
     }
 
-    public function setListPosition($position)
+    public function setListifyPosition($position)
     {
         $this->setAttribute($this->positionColumn(), $position);
     }

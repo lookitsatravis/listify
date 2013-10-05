@@ -436,7 +436,7 @@ trait Listify
             $conditions = $conditions . " AND " . $this->primaryKey() . " != " . $except->id;
         }
 
-        return DB::table($this->getTable())
+        return App::make($this->listifyClass())
             ->whereNotNull($this->getTable() . "." . $this->positionColumn())
             ->whereRaw($conditions)
             ->orderBy($this->getTable() . "." . $this->positionColumn(), "DESC")

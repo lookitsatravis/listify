@@ -41,7 +41,6 @@ First things first, you'll need to add a column to store the position. From the 
 php artisan listify:attach {table_name} {position_column_name}
 php artisan migrate
 ```
-```
 
 > `{table_name}` is a required argument. `{position_column_name}` is optional and the default value is "position".
 

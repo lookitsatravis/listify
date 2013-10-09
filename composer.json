@@ -1,5 +1,5 @@
 {
-    "name": "lookitsatravis/Listify",
+    "name": "lookitsatravis/listify",
     "description": "Turn any Eloquent model into a list!",
     "keywords": ["laravel", "model", "list", "position", "acts_as_list", "rails", "list"],
     "license": "MIT",

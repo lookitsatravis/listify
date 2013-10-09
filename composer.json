@@ -1,6 +1,6 @@
 {
     "name": "lookitsatravis/Listify",
-    "description": "Turn any model into a list!",
+    "description": "Turn any Eloquent model into a list!",
     "keywords": ["laravel", "model", "list", "position", "acts_as_list", "rails", "list"],
     "license": "MIT",
     "authors": [

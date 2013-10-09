@@ -35,12 +35,22 @@ Once this operation completes, the final step is to add the service provider. Op
 
 ## Quickstart
 
-In your model:
+First things first, you'll need to add a column to store the position. From the command line, use the migration generator:
 
 ```php
-class ToDoList extends Eloquent
+php artisan listify:attach {table_name} {position_column_name}
+php artisan migrate
+```
+```
+
+> {table_name} is a required argument. {position_column_name} is optional and the default value is "position".
+
+Then, in your model:
+
+```php
+class User extends Eloquent
 {
-  use lookitsatravis\Listify\listify;
+    use lookitsatravis\Listify\listify;
 
     public function __construct(array $attributes = array()) {
 
@@ -53,14 +63,7 @@ class ToDoList extends Eloquent
 
 > Make sure that the `initListify()` method is called *after* `parent::__construct()` of your model.
 
-From the command line, use the migration generator:
-
-```php
-php artisan listify:attach {table_name} {position_column_name}
-php artisan migrate
-```
-```
-> {table_name} is a required argument. {position_column_name} is optional and the default value is "position".
+That's all it takes to get access to the `Listify` hotness.
 
 ##Overview
 

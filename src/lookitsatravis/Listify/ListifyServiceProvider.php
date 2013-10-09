@@ -18,7 +18,7 @@ class ListifyServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('lookitsatravis/Listify');
+		$this->package('lookitsatravis/listify');
 	}
 
 	/**

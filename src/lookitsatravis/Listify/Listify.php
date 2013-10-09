@@ -8,8 +8,8 @@ use lookitsatravis\Listify\Exceptions\ListifyException;
  * 
  * Ported from https://github.com/swanandp/acts_as_list
  * 
- * @package lookitsatravis/Listify
- * @version 0.1.0
+ * @package lookitsatravis/listify
+ * @version 0.1.1
  * @author Travis Vignon <travis@lookitsatravis.com>
  * @link    
  */

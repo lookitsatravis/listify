@@ -1,8 +1,11 @@
 # Listify
 
+Turn any Eloquent model into a list!
+
 ## Description
 
-`Listify` provides the capabilities for sorting and reordering a number of objects in a list. The class that has this specified needs to have a `position` column defined as an integer on the mapped database table.
+`Listify` provides the capabilities for sorting and reordering a number of objects in a list. The class that has this specified needs to have a `position` column defined as an integer on the mapped database table. `Listify` is an Eloquent port of the highly useful Ruby gem `acts_as_list` (https://github.com/swanandp/acts_as_list).
+
 
 * [Requirements](#requirements)
 * [Installation](#installation)

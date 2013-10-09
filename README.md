@@ -26,7 +26,7 @@ Install the package using Composer.  Edit your project's `composer.json` file to
 ```js
   "require": {
     "laravel/framework": "4.0.*",
-    "lookitsatravis/listify": "dev-master"
+    "lookitsatravis/listify": "0.1.*"
   }  
 ```
 

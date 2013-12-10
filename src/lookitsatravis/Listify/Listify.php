@@ -9,7 +9,7 @@ use lookitsatravis\Listify\Exceptions\ListifyException;
  * Ported from https://github.com/swanandp/acts_as_list
  * 
  * @package lookitsatravis/listify
- * @version 0.1.1
+ * @version 0.1.2
  * @author Travis Vignon <travis@lookitsatravis.com>
  * @link    
  */

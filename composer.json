@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/foundation": "4.0.x"
+        "illuminate/foundation": "4.x"
     },
     "autoload": {
         "classmap": [

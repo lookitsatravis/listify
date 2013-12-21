@@ -41,8 +41,10 @@
 
 <p><code>Listify</code> provides the capabilities for sorting and reordering a number of objects in a list. The class that has this specified needs to have a <code>position</code> column defined as an integer on the mapped database table. <code>Listify</code> is an Eloquent port of the highly useful Ruby gem <code>acts_as_list</code> (<a href="https://github.com/swanandp/acts_as_list">https://github.com/swanandp/acts_as_list</a>).</p>
 
-<p><a href="https://packagist.org/packages/lookitsatravis/listify"><img src="https://poser.pugx.org/lookitsatravis/listify/v/stable.png" alt="Latest Stable Version"></a>
-<a href="https://secure.travis-ci.org/lookitsatravis/listify"><img src="https://secure.travis-ci.org/lookitsatravis/listify.png" alt="Build Status"></a></p>
+<p><a href="https://secure.travis-ci.org/lookitsatravis/listify"><img src="https://secure.travis-ci.org/lookitsatravis/listify.png" alt="Build Status"></a>
+<a href="https://coveralls.io/r/lookitsatravis/listify"><img src="https://coveralls.io/repos/lookitsatravis/listify/badge.png" alt="Coverage Status"></a></p>
+
+<p><a href="https://packagist.org/packages/lookitsatravis/listify"><img src="https://poser.pugx.org/lookitsatravis/listify/v/stable.png" alt="Latest Stable Version"></a></p>
 
 <ul>
 <li><a href="#requirements">Requirements</a></li>
@@ -126,7 +128,7 @@
 <h3>
 <a name="instance-methods-added-to-eloquent-models" class="anchor" href="#instance-methods-added-to-eloquent-models"><span class="octicon octicon-link"></span></a>Instance Methods Added To Eloquent Models</h3>
 
-<p>You'll have a number of methods added to each instance of the Eloquent model that to which <code>Listify</code> is added. </p>
+<p>You'll have a number of methods added to each instance of the Eloquent model to which <code>Listify</code> is added. </p>
 
 <p>In <code>Listify</code>, "higher" means further up the list (a lower <code>position</code>), and "lower" means further down the list (a higher <code>position</code>). That can be confusing, so it might make sense to add tests that validate that you're using the right method given your context.</p>
 
@@ -143,7 +145,10 @@
 <li><code>eloquentModel.moveToTop()</code></li>
 <li><code>eloquentModel.removeFromList()</code></li>
 </ul><h4>
-<a name="methods-that-change-position-without-reordering-list" class="anchor" href="#methods-that-change-position-without-reordering-list"><span class="octicon octicon-link"></span></a>Methods That Change Position Without Reordering List</h4>
+<a name="methods-that-change-position-without-reordering-list-immediately" class="anchor" href="#methods-that-change-position-without-reordering-list-immediately"><span class="octicon octicon-link"></span></a>Methods That Change Position Without Reordering List Immediately</h4>
+
+<h6>
+<a name="note-a-changed-position-will-still-trigger-updates-to-other-items-in-the-list-once-the-model-is-saved" class="anchor" href="#note-a-changed-position-will-still-trigger-updates-to-other-items-in-the-list-once-the-model-is-saved"><span class="octicon octicon-link"></span></a>Note: a changed position will still trigger updates to other items in the list once the model is saved</h6>
 
 <ul>
 <li><code>eloquentModel.incrementPosition()</code></li>

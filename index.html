@@ -70,7 +70,7 @@
 
 <div class="highlight highlight-js"><pre>  <span class="s2">"require"</span><span class="o">:</span> <span class="p">{</span>
     <span class="s2">"laravel/framework"</span><span class="o">:</span> <span class="s2">"4.x"</span><span class="p">,</span>
-    <span class="s2">"lookitsatravis/listify"</span><span class="o">:</span> <span class="s2">"1.0.*"</span>
+    <span class="s2">"lookitsatravis/listify"</span><span class="o">:</span> <span class="s2">"1.0.x"</span>
   <span class="p">}</span>  
 </pre></div>
 
@@ -115,7 +115,7 @@
 </pre></div>
 
 <blockquote>
-<p>Make sure that the <code>initListify()</code> method is called <em>after</em> <code>parent::__construct()</code> of your model.</p>
+<p>Make sure that the <code>initListify()</code> method is called <em>after</em> <code>parent::__construct()</code> of your model, and that <code>static::bootListify()</code> is called <em>after</em> <code>parent::boot()</code>.</p>
 </blockquote>
 
 <p>That's all it takes to get access to the <code>Listify</code> hotness.</p>

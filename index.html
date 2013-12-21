@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Listify by lookitsatravis</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Listify</h1>
+          <h2>Turn any Eloquent model into a list!</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/lookitsatravis/listify/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/lookitsatravis/listify/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/lookitsatravis/listify" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="listify" class="anchor" href="#listify"><span class="octicon octicon-link"></span></a>Listify</h1>
+
+<p>Turn any Eloquent model into a list!</p>
+
+<h2>
+<a name="description" class="anchor" href="#description"><span class="octicon octicon-link"></span></a>Description</h2>
+
+<p><code>Listify</code> provides the capabilities for sorting and reordering a number of objects in a list. The class that has this specified needs to have a <code>position</code> column defined as an integer on the mapped database table. <code>Listify</code> is an Eloquent port of the highly useful Ruby gem <code>acts_as_list</code> (<a href="https://github.com/swanandp/acts_as_list">https://github.com/swanandp/acts_as_list</a>).</p>
+
+<p><a href="https://packagist.org/packages/lookitsatravis/listify"><img src="https://poser.pugx.org/lookitsatravis/listify/v/stable.png" alt="Latest Stable Version"></a>
+<a href="https://secure.travis-ci.org/lookitsatravis/listify"><img src="https://secure.travis-ci.org/lookitsatravis/listify.png" alt="Build Status"></a></p>
+
+<ul>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#quickstart">Quick Start</a></li>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#configuration">Configuration</a></li>
+<li><a href="#notes">Notes</a></li>
+<li><a href="#futureplans">Future Plans</a></li>
+<li><a href="#contributing">Contributing</a></li>
+<li><a href="#copyright">Copyright</a></li>
+</ul><h2>
+<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h2>
+
+<ul>
+<li>
+<code>Listify</code> currently requires php &gt;= 5.4 (<code>Listify</code> is implemented via the use of traits).</li>
+<li>Laravel 4.0 or higher</li>
+</ul><h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p><code>Listify</code> is distributed as a composer package, which is how it should be used in your app.</p>
+
+<p>Install the package using Composer.  Edit your project's <code>composer.json</code> file to require <code>lookitsatravis/listify</code>.</p>
+
+<div class="highlight highlight-js"><pre>  <span class="s2">"require"</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">"laravel/framework"</span><span class="o">:</span> <span class="s2">"4.x"</span><span class="p">,</span>
+    <span class="s2">"lookitsatravis/listify"</span><span class="o">:</span> <span class="s2">"1.0.*"</span>
+  <span class="p">}</span>  
+</pre></div>
+
+<p>Once this operation completes, the final step is to add the service provider. Open <code>app/config/app.php</code>, and add a new item to the providers array.</p>
+
+<div class="highlight highlight-php"><pre>    <span class="s1">'lookitsatravis\Listify\ListifyServiceProvider'</span> 
+</pre></div>
+
+<h2>
+<a name="quickstart" class="anchor" href="#quickstart"><span class="octicon octicon-link"></span></a>Quickstart</h2>
+
+<p>First things first, you'll need to add a column to store the position. From the command line, use the migration generator:</p>
+
+<div class="highlight highlight-php"><pre><span class="nx">php</span> <span class="nx">artisan</span> <span class="nx">listify</span><span class="o">:</span><span class="nx">attach</span> <span class="p">{</span><span class="nx">table_name</span><span class="p">}</span> <span class="p">{</span><span class="nx">position_column_name</span><span class="p">}</span>
+<span class="nx">php</span> <span class="nx">artisan</span> <span class="nx">migrate</span>
+</pre></div>
+
+<blockquote>
+<p><code>{table_name}</code> is a required argument. <code>{position_column_name}</code> is optional and the default value is "position".</p>
+</blockquote>
+
+<p>Then, in your model:</p>
+
+<div class="highlight highlight-php"><pre><span class="k">class</span> <span class="nc">User</span> <span class="k">extends</span> <span class="nx">Eloquent</span>
+<span class="p">{</span>
+    <span class="k">use</span> <span class="nx">lookitsatravis\Listify\listify</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="k">array</span> <span class="nv">$attributes</span> <span class="o">=</span> <span class="k">array</span><span class="p">(),</span> <span class="nv">$exists</span> <span class="o">=</span> <span class="k">false</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$attributes</span><span class="p">,</span> <span class="nv">$exists</span><span class="p">);</span>
+
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">initListify</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">boot</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">boot</span><span class="p">();</span>
+
+        <span class="k">static</span><span class="o">::</span><span class="na">bootListify</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<blockquote>
+<p>Make sure that the <code>initListify()</code> method is called <em>after</em> <code>parent::__construct()</code> of your model.</p>
+</blockquote>
+
+<p>That's all it takes to get access to the <code>Listify</code> hotness.</p>
+
+<h2>
+<a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h2>
+
+<h3>
+<a name="instance-methods-added-to-eloquent-models" class="anchor" href="#instance-methods-added-to-eloquent-models"><span class="octicon octicon-link"></span></a>Instance Methods Added To Eloquent Models</h3>
+
+<p>You'll have a number of methods added to each instance of the Eloquent model that to which <code>Listify</code> is added. </p>
+
+<p>In <code>Listify</code>, "higher" means further up the list (a lower <code>position</code>), and "lower" means further down the list (a higher <code>position</code>). That can be confusing, so it might make sense to add tests that validate that you're using the right method given your context.</p>
+
+<h4>
+<a name="methods-that-change-position-and-reorder-list" class="anchor" href="#methods-that-change-position-and-reorder-list"><span class="octicon octicon-link"></span></a>Methods That Change Position and Reorder List</h4>
+
+<ul>
+<li><code>eloquentModel.insertAt(2)</code></li>
+<li>
+<code>eloquentModel.moveLower()</code> will do nothing if the item is the lowest item</li>
+<li>
+<code>eloquentModel.moveHigher()</code> will do nothing if the item is the highest item</li>
+<li><code>eloquentModel.moveToBottom()</code></li>
+<li><code>eloquentModel.moveToTop()</code></li>
+<li><code>eloquentModel.removeFromList()</code></li>
+</ul><h4>
+<a name="methods-that-change-position-without-reordering-list" class="anchor" href="#methods-that-change-position-without-reordering-list"><span class="octicon octicon-link"></span></a>Methods That Change Position Without Reordering List</h4>
+
+<ul>
+<li><code>eloquentModel.incrementPosition()</code></li>
+<li><code>eloquentModel.decrementPosition()</code></li>
+<li><code>eloquentModel.setListPosition(3)</code></li>
+</ul><h4>
+<a name="methods-that-return-attributes-of-the-items-list-position" class="anchor" href="#methods-that-return-attributes-of-the-items-list-position"><span class="octicon octicon-link"></span></a>Methods That Return Attributes of the Item's List Position</h4>
+
+<ul>
+<li><code>eloquentModel.isFirst()</code></li>
+<li><code>eloquentModel.isLast()</code></li>
+<li><code>eloquentModel.isInList()</code></li>
+<li><code>eloquentModel.isNotInList()</code></li>
+<li><code>eloquentModel.isDefaultPosition()</code></li>
+<li><code>eloquentModel.higherItem()</code></li>
+<li>
+<code>eloquentModel.higherItems()</code> will return all the items above <code>eloquentModel</code> in the list (ordered by the position, ascending)</li>
+<li><code>eloquentModel.lowerItem()</code></li>
+<li>
+<code>eloquentModel.lowerItems()</code> will return all the items below <code>eloquentModel</code> in the list (ordered by the position, ascending)</li>
+</ul><h2>
+<a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h2>
+
+<p>There are a few configuration options available. You'll need to pass these in as an array argument for <code>initListify()</code> in your model's constructor. Here are the options:</p>
+
+<ul>
+<li>
+<code>top_of_list</code> sets the integer position for the top of the list (default: <code>1</code>).</li>
+<li>
+<code>column</code> sets the name of your position column that you chose during installation (default: <code>'position'</code>).</li>
+<li>
+<code>add_new_at</code> sets the name of your position column that you chose during installation (default: <code>'bottom'</code>, options: <code>'top'</code> or <code>'bottom'</code>).</li>
+<li>
+<code>scope</code> allows you to scope the items in your list. This one requires a bit of elaboration. There are three posible values accepted:
+
+<ul>
+<li><code>string</code></li>
+<li>
+<code>Illuminate\Database\Eloquent\Relations\BelongsTo</code> object</li>
+<li>
+<code>Illuminate\Database\Eloquent\Builder</code> object</li>
+</ul>
+</li>
+</ul><hr><h3>
+<a name="string" class="anchor" href="#string"><span class="octicon octicon-link"></span></a>String</h3>
+
+<p>If <code>string</code> is passed in, a raw string is passed in as a <code>whereRaw</code> to the scope. This allows you to do something like <code>'custom_foreign_key = 42'</code> and have all of the items scoped to that result set. You can pass as complicated of a where clause as you want, and it will be passed straight into each DB operation.</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-php"><pre><span class="k">class</span> <span class="nc">User</span> <span class="k">extends</span> <span class="nx">Eloquent</span>
+<span class="p">{</span>
+    <span class="k">use</span> <span class="nx">lookitsatravis\Listify\listify</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="k">array</span> <span class="nv">$attributes</span> <span class="o">=</span> <span class="k">array</span><span class="p">(),</span> <span class="nv">$exists</span> <span class="o">=</span> <span class="k">false</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$attributes</span><span class="p">,</span> <span class="nv">$exists</span><span class="p">);</span>
+
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">initListify</span><span class="p">([</span>
+            <span class="s1">'scope'</span> <span class="o">=&gt;</span> <span class="s1">'answer_to_ltuae = 42'</span>
+        <span class="p">]);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">boot</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">boot</span><span class="p">();</span>
+
+        <span class="k">static</span><span class="o">::</span><span class="na">bootListify</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Results in a scope of:</p>
+
+<p><code>WHERE answer_to_ltuae = 42</code></p>
+
+<hr><h3>
+<a name="illuminatedatabaseeloquentrelationsbelongsto" class="anchor" href="#illuminatedatabaseeloquentrelationsbelongsto"><span class="octicon octicon-link"></span></a>Illuminate\Database\Eloquent\Relations\BelongsTo</h3>
+
+<p>If <code>Illuminate\Database\Eloquent\Relations\BelongsTo</code> is passed in, <code>Listify</code> will match up the foreign key of the scope to the value of the corresponding foreign key of the model instance.</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-php"><pre><span class="k">class</span> <span class="nc">ToDoListItem</span> <span class="k">extends</span> <span class="nx">Eloquent</span>
+<span class="p">{</span>
+    <span class="k">use</span> <span class="nx">lookitsatravis\Listify\listify</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="k">array</span> <span class="nv">$attributes</span> <span class="o">=</span> <span class="k">array</span><span class="p">(),</span> <span class="nv">$exists</span> <span class="o">=</span> <span class="k">false</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$attributes</span><span class="p">,</span> <span class="nv">$exists</span><span class="p">);</span>
+
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">initListify</span><span class="p">([</span>
+            <span class="s1">'scope'</span> <span class="o">=&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">toDoList</span><span class="p">()</span>
+        <span class="p">]);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">boot</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">boot</span><span class="p">();</span>
+
+        <span class="k">static</span><span class="o">::</span><span class="na">bootListify</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">toDoList</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">belongsTo</span><span class="p">(</span><span class="s1">'ToDoList'</span><span class="p">);</span> 
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Results in a scope of:</p>
+
+<p><code>WHERE to_do_list_id = {{value of toDoListItem.to_do_list_id}}</code></p>
+
+<hr><h3>
+<a name="illuminatedatabaseeloquentbuilder" class="anchor" href="#illuminatedatabaseeloquentbuilder"><span class="octicon octicon-link"></span></a>Illuminate\Database\Eloquent\Builder</h3>
+
+<p>And lastly, if <code>Illuminate\Database\Eloquent\Builder</code> is passed in, <code>Listify</code> will extract the where clause of the builder and use it as the scope of the <code>Listify</code> items. This one is tricky, because in order for it to work, the query objects <code>where</code> array is prepared with the bindings and then passed in as a raw string. So, please keep in mind that this route can open your application up to abuse if you are not careful.</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-php"><pre><span class="k">class</span> <span class="nc">ToDoListItem</span> <span class="k">extends</span> <span class="nx">Eloquent</span>
+<span class="p">{</span>
+    <span class="k">use</span> <span class="nx">lookitsatravis\Listify\listify</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="k">array</span> <span class="nv">$attributes</span> <span class="o">=</span> <span class="k">array</span><span class="p">(),</span> <span class="nv">$exists</span> <span class="o">=</span> <span class="k">false</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$attributes</span><span class="p">,</span> <span class="nv">$exists</span><span class="p">);</span>
+
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">initListify</span><span class="p">([</span>
+            <span class="s1">'scope'</span> <span class="o">=&gt;</span> <span class="nx">App</span><span class="o">::</span><span class="na">make</span><span class="p">(</span><span class="s1">'ToDoList'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'='</span><span class="p">,</span> <span class="s1">'Not A List of My Favorite Porn Videos'</span><span class="p">)</span>
+        <span class="p">]);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">boot</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">boot</span><span class="p">();</span>
+
+        <span class="k">static</span><span class="o">::</span><span class="na">bootListify</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">toDoList</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">belongsTo</span><span class="p">(</span><span class="s1">'ToDoList'</span><span class="p">);</span> 
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Results in a scope of:</p>
+
+<p><code>to_do_lists.name = 'Not A List of My Favorite Porn Videos'</code></p>
+
+<h2>
+<a name="notes" class="anchor" href="#notes"><span class="octicon octicon-link"></span></a>Notes</h2>
+
+<p>All <code>position</code> queries (select, update, etc.) inside trait methods are executed without the default scope, this will prevent nasty issues when the default scope is different from <code>Listify</code> scope.</p>
+
+<p>The <code>position</code> column is set after validations are called, so you should not put a <code>presence</code> validation on the <code>position</code> column.</p>
+
+<h2>
+<a name="future-plans" class="anchor" href="#future-plans"><span class="octicon octicon-link"></span></a>Future Plans</h2>
+
+<p>Really, the only plans I've got right now are to create a couple of additional features for the install command. Things like:</p>
+
+<ul>
+<li>update the model with trait automatically (including init method in constructor and boot method for events)</li>
+<li>generate (or add to) a controller with actions for each public method for <code>Listify</code>, including adding necessary routes. This would make it easy to, say, call something like <code>http://localhost:8000/foos/1/move_lower</code> through an AJAX-y front end.</li>
+</ul><p>Aside from that, I hope to just keep in parity with the Ruby gem <code>acts_as_list</code> (<a href="https://github.com/swanandp/acts_as_list">https://github.com/swanandp/acts_as_list</a>) as necessary.</p>
+
+<h2>
+<a name="contributing-to-listify" class="anchor" href="#contributing-to-listify"><span class="octicon octicon-link"></span></a>Contributing to <code>Listify</code>
+</h2>
+
+<ul>
+<li>Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet</li>
+<li>Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it</li>
+<li>Fork the project</li>
+<li>Start a feature/bugfix branch</li>
+<li>Commit and push until you are happy with your contribution</li>
+<li>Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.</li>
+<li>Please try not to mess with the Composer.json, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.</li>
+<li>I would recommend using Laravel 4.0.x and higher for testing the build before a pull request.</li>
+</ul><h2>
+<a name="copyright" class="anchor" href="#copyright"><span class="octicon octicon-link"></span></a>Copyright</h2>
+
+<p>Copyright (c) 2013 Travis Vignon, released under the MIT license</p>
+        </section>
+
+        <footer>
+          Listify is maintained by <a href="https://github.com/lookitsatravis">lookitsatravis</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>

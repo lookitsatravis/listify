@@ -103,7 +103,7 @@ class AttachCommand extends Command {
 		$data['className'] = 'Add' . $data['targetColumnClassName'] . 'To' . $data['targetTableClassName'] . 'Table';
 
 		// Save the new migration to disk using the stapler migration view.
-		$migration = View::make('Listify::migration', $data)->render();
+		$migration = View::make('listify::migration', $data)->render();
 		File::put($fileName, $migration);
 		
 		// Dump the autoloader and print a created migration message to the console.

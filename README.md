@@ -6,6 +6,10 @@ Turn any Eloquent model into a list!
 
 `Listify` provides the capabilities for sorting and reordering a number of objects in a list. The class that has this specified needs to have a `position` column defined as an integer on the mapped database table. `Listify` is an Eloquent port of the highly useful Ruby gem `acts_as_list` (https://github.com/swanandp/acts_as_list).
 
+[![Build Status](https://secure.travis-ci.org/lookitsatravis/listify.png)](https://secure.travis-ci.org/lookitsatravis/listify)
+[![Coverage Status](https://coveralls.io/repos/lookitsatravis/listify/badge.png)](https://coveralls.io/r/lookitsatravis/listify)
+
+[![Latest Stable Version](https://poser.pugx.org/lookitsatravis/listify/v/stable.png)](https://packagist.org/packages/lookitsatravis/listify)
 
 * [Requirements](#requirements)
 * [Installation](#installation)
@@ -13,10 +17,14 @@ Turn any Eloquent model into a list!
 * [Overview](#overview)
 * [Configuration](#configuration)
 * [Notes](#notes)
+* [Future Plans](#futureplans)
+* [Contributing](#contributing)
+* [Copyright](#copyright)
+
 
 ## Requirements
 * `Listify` currently requires php >= 5.4 (`Listify` is implemented via the use of traits).
-* Laravel 4
+* Laravel 4.0 or higher
 
 ## Installation
 `Listify` is distributed as a composer package, which is how it should be used in your app.
@@ -25,8 +33,8 @@ Install the package using Composer.  Edit your project's `composer.json` file to
 
 ```js
   "require": {
-    "laravel/framework": "4.0.*",
-    "lookitsatravis/listify": "0.1.*"
+    "laravel/framework": "4.x",
+    "lookitsatravis/listify": "1.0.x"
   }  
 ```
 
@@ -54,24 +62,31 @@ class User extends Eloquent
 {
     use lookitsatravis\Listify\listify;
 
-    public function __construct(array $attributes = array()) {
+    public function __construct(array $attributes = array(), $exists = false) {
 
-        parent::__construct($attributes);
+        parent::__construct($attributes, $exists);
 
         $this->initListify();
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::bootListify();
     }
 }
 ```
 
-> Make sure that the `initListify()` method is called *after* `parent::__construct()` of your model.
+> Make sure that the `initListify()` method is called *after* `parent::__construct()` of your model, and that `static::bootListify()` is called *after* `parent::boot()`.
 
 That's all it takes to get access to the `Listify` hotness.
 
-##Overview
+## Overview
 
 ### Instance Methods Added To Eloquent Models
 
-You'll have a number of methods added to each instance of the Eloquent model that to which `Listify` is added. 
+You'll have a number of methods added to each instance of the Eloquent model to which `Listify` is added. 
 
 In `Listify`, "higher" means further up the list (a lower `position`), and "lower" means further down the list (a higher `position`). That can be confusing, so it might make sense to add tests that validate that you're using the right method given your context.
 
@@ -84,7 +99,8 @@ In `Listify`, "higher" means further up the list (a lower `position`), and "lowe
 - `eloquentModel.moveToTop()`
 - `eloquentModel.removeFromList()`
 
-#### Methods That Change Position Without Reordering List
+#### Methods That Change Position Without Reordering List Immediately
+###### Note: a changed position will still trigger updates to other items in the list once the model is saved
 
 - `eloquentModel.incrementPosition()`
 - `eloquentModel.decrementPosition()`
@@ -101,16 +117,149 @@ In `Listify`, "higher" means further up the list (a lower `position`), and "lowe
 - `eloquentModel.lowerItem()`
 - `eloquentModel.lowerItems()` will return all the items below `eloquentModel` in the list (ordered by the position, ascending)
 
-## Notes
+##Configuration
 
-If the `position` column has a default value, then there is a slight change in behavior, i.e if you have 4 items in the list, and you insert 1, with a default position 0, it would be pushed to the bottom of the list. Please look at the tests for this and some recent pull requests for discussions related to this.
+There are a few configuration options available. You'll need to pass these in as an array argument for `initListify()` in your model's constructor. Here are the options:
+
+- `top_of_list` sets the integer position for the top of the list (default: `1`).
+- `column` sets the name of your position column that you chose during installation (default: `'position'`).
+- `add_new_at` sets the name of your position column that you chose during installation (default: `'bottom'`, options: `'top'` or `'bottom'`).
+- `scope` allows you to scope the items in your list. This one requires a bit of elaboration. There are three posible values accepted:
+    - `string`
+    - `Illuminate\Database\Eloquent\Relations\BelongsTo` object
+    - `Illuminate\Database\Eloquent\Builder` object
+
+***
+
+###String
+
+If `string` is passed in, a raw string is passed in as a `whereRaw` to the scope. This allows you to do something like `'custom_foreign_key = 42'` and have all of the items scoped to that result set. You can pass as complicated of a where clause as you want, and it will be passed straight into each DB operation.
+
+Example:
+
+```php
+class User extends Eloquent
+{
+    use lookitsatravis\Listify\listify;
+
+    public function __construct(array $attributes = array(), $exists = false) {
+
+        parent::__construct($attributes, $exists);
+
+        $this->initListify([
+            'scope' => 'answer_to_ltuae = 42'
+        ]);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::bootListify();
+    }
+}
+```
+
+Results in a scope of:
+
+`WHERE answer_to_ltuae = 42`
+
+***
+
+###Illuminate\Database\Eloquent\Relations\BelongsTo
+
+If `Illuminate\Database\Eloquent\Relations\BelongsTo` is passed in, `Listify` will match up the foreign key of the scope to the value of the corresponding foreign key of the model instance.
+
+Example:
+
+```php
+class ToDoListItem extends Eloquent
+{
+    use lookitsatravis\Listify\listify;
+
+    public function __construct(array $attributes = array(), $exists = false) {
+
+        parent::__construct($attributes, $exists);
+
+        $this->initListify([
+            'scope' => $this->toDoList()
+        ]);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::bootListify();
+    }
+
+    public function toDoList()
+    {
+        $this->belongsTo('ToDoList'); 
+    }
+}
+```
+
+Results in a scope of:
+
+`WHERE to_do_list_id = {{value of toDoListItem.to_do_list_id}}`
+
+***
+
+###Illuminate\Database\Eloquent\Builder
+
+And lastly, if `Illuminate\Database\Eloquent\Builder` is passed in, `Listify` will extract the where clause of the builder and use it as the scope of the `Listify` items. This one is tricky, because in order for it to work, the query objects `where` array is prepared with the bindings and then passed in as a raw string. So, please keep in mind that this route can open your application up to abuse if you are not careful.
+
+Example:
+
+```php
+class ToDoListItem extends Eloquent
+{
+    use lookitsatravis\Listify\listify;
+
+    public function __construct(array $attributes = array(), $exists = false) {
+
+        parent::__construct($attributes, $exists);
+
+        $this->initListify([
+            'scope' => App::make('ToDoList')->where('name', '=', 'Not A List of My Favorite Porn Videos')
+        ]);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::bootListify();
+    }
+
+    public function toDoList()
+    {
+        $this->belongsTo('ToDoList'); 
+    }
+}
+```
+
+Results in a scope of:
+
+`to_do_lists.name = 'Not A List of My Favorite Porn Videos'`
+
+
+## Notes
 
 All `position` queries (select, update, etc.) inside trait methods are executed without the default scope, this will prevent nasty issues when the default scope is different from `Listify` scope.
 
 The `position` column is set after validations are called, so you should not put a `presence` validation on the `position` column.
 
-## Build Status
-[![Build Status](https://secure.travis-ci.org/lookitsatravis/listify.png)](https://secure.travis-ci.org/lookitsatravis/listify)
+
+## Future Plans
+
+Really, the only plans I've got right now are to create a couple of additional features for the install command. Things like:
+
+- update the model with trait automatically (including init method in constructor and boot method for events)
+- generate (or add to) a controller with actions for each public method for `Listify`, including adding necessary routes. This would make it easy to, say, call something like `http://localhost:8000/foos/1/move_lower` through an AJAX-y front end.
+
+Aside from that, I hope to just keep in parity with the Ruby gem `acts_as_list` (https://github.com/swanandp/acts_as_list) as necessary.
 
 ## Contributing to `Listify`
  

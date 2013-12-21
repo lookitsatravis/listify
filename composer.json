@@ -1,17 +1,21 @@
 {
     "name": "lookitsatravis/listify",
-    "description": "Turn any Eloquent model into a list!",
+    "description": "Turn any Eloquent model into a list! http://lookitsatravis.github.io/listify",
     "keywords": ["laravel", "model", "list", "position", "acts_as_list", "rails", "list"],
     "license": "MIT",
     "authors": [
         {
             "name": "Travis Vignon",
-            "email": "travis@lookitsatravis.com"
+            "email": "travis@lookitsatravis.com",
+            "homepage": "http://lookitsatravis.com"
         }
     ],
     "require": {
         "php": ">=5.4.0",
         "illuminate/foundation": "4.x"
+    },
+    "require-dev": {
+        "satooshi/php-coveralls": "dev-master"
     },
     "autoload": {
         "classmap": [

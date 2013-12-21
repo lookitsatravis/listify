@@ -1,4 +1,6 @@
 /vendor
+/tests/test_app/vendor
 composer.phar
 composer.lock
 .DS_Store
+/build/

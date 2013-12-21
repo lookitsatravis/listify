@@ -5,6 +5,15 @@ php:
 
 before_script:
   - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install --dev
+  - php composer.phar install --dev --no-interaction
+  - cd tests/test_app
+  - curl -s http://getcomposer.org/installer | php
+  - php composer.phar install --dev --no-interaction
+  - cd ../../
 
-script: phpunit
+script:
+  - mkdir -p build/logs
+  - phpunit
+
+after_script:
+  - php vendor/bin/coveralls

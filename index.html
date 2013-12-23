@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <title>Listify by lookitsatravis</title>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Listify : Turn any Eloquent model into a list!" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Listify</title>
   </head>
 
   <body>
-    <div id="container">
-      <div class="inner">
 
-        <header>
-          <h1>Listify</h1>
-          <h2>Turn any Eloquent model into a list!</h2>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/lookitsatravis/listify">View on GitHub</a>
+
+          <h1 id="project_title">Listify</h1>
+          <h2 id="project_tagline">Turn any Eloquent model into a list!</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/lookitsatravis/listify/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/lookitsatravis/listify/tarball/master">Download this project as a tar.gz file</a>
+            </section>
         </header>
+    </div>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/lookitsatravis/listify/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/lookitsatravis/listify/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/lookitsatravis/listify" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
-
-        <hr>
-
-        <section id="main_content">
-          <h1>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
 <a name="listify" class="anchor" href="#listify"><span class="octicon octicon-link"></span></a>Listify</h1>
 
 <p>Turn any Eloquent model into a list!</p>
@@ -189,7 +189,7 @@
 <li>
 <code>Illuminate\Database\Eloquent\Relations\BelongsTo</code> object</li>
 <li>
-<code>Illuminate\Database\Eloquent\Builder</code> object</li>
+<code>Illuminate\Database\Query\Builder</code> object</li>
 </ul>
 </li>
 </ul><hr><h3>
@@ -264,9 +264,11 @@
 <p><code>WHERE to_do_list_id = {{value of toDoListItem.to_do_list_id}}</code></p>
 
 <hr><h3>
-<a name="illuminatedatabaseeloquentbuilder" class="anchor" href="#illuminatedatabaseeloquentbuilder"><span class="octicon octicon-link"></span></a>Illuminate\Database\Eloquent\Builder</h3>
+<a name="illuminatedatabasequerybuilder" class="anchor" href="#illuminatedatabasequerybuilder"><span class="octicon octicon-link"></span></a>Illuminate\Database\Query\Builder</h3>
 
-<p>And lastly, if <code>Illuminate\Database\Eloquent\Builder</code> is passed in, <code>Listify</code> will extract the where clause of the builder and use it as the scope of the <code>Listify</code> items. This one is tricky, because in order for it to work, the query objects <code>where</code> array is prepared with the bindings and then passed in as a raw string. So, please keep in mind that this route can open your application up to abuse if you are not careful.</p>
+<p>And lastly, if <code>Illuminate\Database\Query\Builder</code> is passed in, <code>Listify</code> will extract the where clause of the builder and use it as the scope of the <code>Listify</code> items. This scope type was added in an attempt to keep parity between the <code>acts_as_list</code> version and <code>Listify</code>; <strong>however, due to differences in the languages and in ActiveRecord versus Eloquent, it is a limited implementation so far and needs impovement to be more flexible and secure. This is a big limitation and will be the first thing addressed in upcoming releases.</strong></p>
+
+<p>This one is tricky, because in order for it to work the query objects <code>where</code> array is prepared with the bindings <em>outside of PDO</em> and then passed in as a raw string. So, please keep in mind that this route can open your application up to abuse if you are not careful about how the object is built. If you use direct user input, please sanitize the data before using this as a scope for <code>Listify</code>.</p>
 
 <p>Example:</p>
 
@@ -279,7 +281,7 @@
         <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$attributes</span><span class="p">,</span> <span class="nv">$exists</span><span class="p">);</span>
 
         <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">initListify</span><span class="p">([</span>
-            <span class="s1">'scope'</span> <span class="o">=&gt;</span> <span class="nx">App</span><span class="o">::</span><span class="na">make</span><span class="p">(</span><span class="s1">'ToDoList'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'='</span><span class="p">,</span> <span class="s1">'Not A List of My Favorite Porn Videos'</span><span class="p">)</span>
+            <span class="s1">'scope'</span> <span class="o">=&gt;</span> <span class="nx">DB</span><span class="o">::</span><span class="na">table</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getTable</span><span class="p">())</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">(</span><span class="s1">'type'</span><span class="p">,</span> <span class="s1">'='</span><span class="p">,</span> <span class="s1">'Not A List of My Favorite Porn Videos'</span><span class="p">)</span>
         <span class="p">]);</span>
     <span class="p">}</span>
 
@@ -289,17 +291,12 @@
 
         <span class="k">static</span><span class="o">::</span><span class="na">bootListify</span><span class="p">();</span>
     <span class="p">}</span>
-
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">toDoList</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">belongsTo</span><span class="p">(</span><span class="s1">'ToDoList'</span><span class="p">);</span> 
-    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 
 <p>Results in a scope of:</p>
 
-<p><code>to_do_lists.name = 'Not A List of My Favorite Porn Videos'</code></p>
+<p><code>to_do_list_items.type = 'Not A List of My Favorite Porn Videos'</code></p>
 
 <h2>
 <a name="notes" class="anchor" href="#notes"><span class="octicon octicon-link"></span></a>Notes</h2>
@@ -311,11 +308,15 @@
 <h2>
 <a name="future-plans" class="anchor" href="#future-plans"><span class="octicon octicon-link"></span></a>Future Plans</h2>
 
-<p>Really, the only plans I've got right now are to create a couple of additional features for the install command. Things like:</p>
+<ul>
+<li>Update <code>Illuminate\Database\Query\Builder</code> scope to be more secure and flexible</li>
+<li>Additional features for the install command. Things like:
 
 <ul>
 <li>update the model with trait automatically (including init method in constructor and boot method for events)</li>
 <li>generate (or add to) a controller with actions for each public method for <code>Listify</code>, including adding necessary routes. This would make it easy to, say, call something like <code>http://localhost:8000/foos/1/move_lower</code> through an AJAX-y front end.</li>
+</ul>
+</li>
 </ul><p>Aside from that, I hope to just keep in parity with the Ruby gem <code>acts_as_list</code> (<a href="https://github.com/swanandp/acts_as_list">https://github.com/swanandp/acts_as_list</a>) as necessary.</p>
 
 <h2>
@@ -335,15 +336,18 @@
 <a name="copyright" class="anchor" href="#copyright"><span class="octicon octicon-link"></span></a>Copyright</h2>
 
 <p>Copyright (c) 2013 Travis Vignon, released under the MIT license</p>
-        </section>
-
-        <footer>
-          Listify is maintained by <a href="https://github.com/lookitsatravis">lookitsatravis</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
-
-        
-      </div>
+      </section>
     </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Listify maintained by <a href="https://github.com/lookitsatravis">lookitsatravis</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
   </body>
 </html>

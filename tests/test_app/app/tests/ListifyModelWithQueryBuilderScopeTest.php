@@ -2,13 +2,13 @@
 
 use Way\Tests\Assert;
 
-class ListifyModelWithStringScopeTest extends ListifyBaseTest {
+class ListifyModelWithQueryBuilderScopeTest extends ListifyBaseTest {
 
-    protected $model = 'FooWithStringScopeA';
-    protected $modelScopeValue = "company = 'companyA'";
+    protected $model = 'FooWithQueryBuilderScopeA';
+    protected $modelScopeValue = "company = 'ACME'";
 
-    private $modelB = 'FooWithStringScopeB';
-    private $modelBScopeValue = "company = 'companyB'";
+    private $modelB = 'FooWithQueryBuilderScopeB';
+    private $modelBScopeValue = "company = 'NOT_ACME'";
 
     public function setUp()
     {
@@ -22,7 +22,7 @@ class ListifyModelWithStringScopeTest extends ListifyBaseTest {
         {
             $foo = App::make($this->modelB);
             $foo->name = $this->modelB . $i;
-            $foo->company = 'companyB';
+            $foo->company = 'NOT_ACME';
             $foo->save();
         }
 
@@ -37,27 +37,35 @@ class ListifyModelWithStringScopeTest extends ListifyBaseTest {
         $modelB::flushEventListeners();
     }
 
+    /**
+     * @expectedException lookitsatravis\Listify\Exceptions\InvalidQueryBuilderException
+     */
+    public function test_passScopeInWithMissingWhere()
+    {
+        $foo = App::make($this->model);
+        $foo->name = $this->model . "New";
+        $foo->setListifyConfig('scope', DB::table('foos')->orderBy('id ASC'));
+        $foo->save();
+    }
+
     public function test_changeScopeBeforeUpdate()
     {
-        $foo1 = $this->model;
-        $foo1 = new $foo1();
+        $foo1 = App::make($this->model);
         $foo1->name = $this->model . "Test1";
         $foo1->company = 'TestCompany1';
-        $foo1->setListifyConfig('scope', "company = 'TestCompany1'");
+        $foo1->setListifyConfig('scope', DB::table('foo_with_query_builder_scopes')->where('company', '=', 'TestCompany1'));
         $foo1->save();
 
-        $foo2 = $this->model;
-        $foo2 = new $foo2();
+        $foo2 = App::make($this->model);
         $foo2->name = $this->model . "Test2";
         $foo2->company = 'TestCompany1';
-        $foo2->setListifyConfig('scope', "company = 'TestCompany1'");
+        $foo2->setListifyConfig('scope', DB::table('foo_with_query_builder_scopes')->where('company', '=', 'TestCompany1'));
         $foo2->save();
 
         Assert::eq(1, $foo1->getListifyPosition());
         Assert::eq(2, $foo2->getListifyPosition());
 
-        $foo1->company = 'TestCompany2';
-        $foo1->setListifyConfig('scope', "company = 'TestCompany2'");
+        $foo1->setListifyConfig('scope', DB::table('foo_with_query_builder_scopes')->where('company', '=', 'TestCompany2'));
         $foo1->save();
 
         Assert::eq(1, $foo1->getListifyPosition());

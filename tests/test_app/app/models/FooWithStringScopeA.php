@@ -1,13 +1,5 @@
 <?php
 
-/*
-This is here because the files aren't being autoloaded by PHPUnit due to the scope of the testing.
-If you have a better idea, I'm all ears! travis@lookitsatravis.com
- */
-
-require_once __DIR__ . '/../../../../src/lookitsatravis/Listify/Listify.php';
-require_once __DIR__ . '/../../../../src/lookitsatravis/Listify/Exceptions/ListifyException.php';
-
 class FooWithStringScopeA extends Eloquent 
 {
     use lookitsatravis\Listify\Listify;

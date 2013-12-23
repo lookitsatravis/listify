@@ -127,7 +127,7 @@ There are a few configuration options available. You'll need to pass these in as
 - `scope` allows you to scope the items in your list. This one requires a bit of elaboration. There are three posible values accepted:
     - `string`
     - `Illuminate\Database\Eloquent\Relations\BelongsTo` object
-    - `Illuminate\Database\Eloquent\Builder` object
+    - `Illuminate\Database\Query\Builder` object
 
 ***
 
@@ -206,9 +206,11 @@ Results in a scope of:
 
 ***
 
-###Illuminate\Database\Eloquent\Builder
+###Illuminate\Database\Query\Builder
 
-And lastly, if `Illuminate\Database\Eloquent\Builder` is passed in, `Listify` will extract the where clause of the builder and use it as the scope of the `Listify` items. This one is tricky, because in order for it to work, the query objects `where` array is prepared with the bindings and then passed in as a raw string. So, please keep in mind that this route can open your application up to abuse if you are not careful.
+And lastly, if `Illuminate\Database\Query\Builder` is passed in, `Listify` will extract the where clause of the builder and use it as the scope of the `Listify` items. This scope type was added in an attempt to keep parity between the `acts_as_list` version and `Listify`; **however, due to differences in the languages and in ActiveRecord versus Eloquent, it is a limited implementation so far and needs impovement to be more flexible and secure. This is a big limitation and will be the first thing addressed in upcoming releases.**
+
+This one is tricky, because in order for it to work the query objects `where` array is prepared with the bindings *outside of PDO* and then passed in as a raw string. So, please keep in mind that this route can open your application up to abuse if you are not careful about how the object is built. If you use direct user input, please sanitize the data before using this as a scope for `Listify`.
 
 Example:
 
@@ -222,7 +224,7 @@ class ToDoListItem extends Eloquent
         parent::__construct($attributes, $exists);
 
         $this->initListify([
-            'scope' => App::make('ToDoList')->where('name', '=', 'Not A List of My Favorite Porn Videos')
+            'scope' => DB::table($this->getTable())->where('type', '=', 'Not A List of My Favorite Porn Videos')
         ]);
     }
 
@@ -232,17 +234,12 @@ class ToDoListItem extends Eloquent
 
         static::bootListify();
     }
-
-    public function toDoList()
-    {
-        $this->belongsTo('ToDoList'); 
-    }
 }
 ```
 
 Results in a scope of:
 
-`to_do_lists.name = 'Not A List of My Favorite Porn Videos'`
+`to_do_list_items.type = 'Not A List of My Favorite Porn Videos'`
 
 
 ## Notes
@@ -254,10 +251,11 @@ The `position` column is set after validations are called, so you should not put
 
 ## Future Plans
 
-Really, the only plans I've got right now are to create a couple of additional features for the install command. Things like:
-
-- update the model with trait automatically (including init method in constructor and boot method for events)
-- generate (or add to) a controller with actions for each public method for `Listify`, including adding necessary routes. This would make it easy to, say, call something like `http://localhost:8000/foos/1/move_lower` through an AJAX-y front end.
+- Update `Illuminate\Database\Query\Builder` scope to be more secure and flexible
+- 
+- Additional features for the install command. Things like:
+    - update the model with trait automatically (including init method in constructor and boot method for events)
+    - generate (or add to) a controller with actions for each public method for `Listify`, including adding necessary routes. This would make it easy to, say, call something like `http://localhost:8000/foos/1/move_lower` through an AJAX-y front end.
 
 Aside from that, I hope to just keep in parity with the Ruby gem `acts_as_list` (https://github.com/swanandp/acts_as_list) as necessary.
 

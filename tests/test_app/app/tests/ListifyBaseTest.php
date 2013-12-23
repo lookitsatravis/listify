@@ -1,5 +1,17 @@
 <?php
 
+/*
+This is here because the files aren't being autoloaded by PHPUnit due to the scope of the testing.
+If you have a better idea, I'm all ears! travis@lookitsatravis.com
+ */
+
+require_once __DIR__ . '/../../../../src/lookitsatravis/Listify/Listify.php';
+require_once __DIR__ . '/../../../../src/lookitsatravis/Listify/Exceptions/ListifyException.php';
+require_once __DIR__ . '/../../../../src/lookitsatravis/Listify/Exceptions/NullForeignKeyException.php';
+require_once __DIR__ . '/../../../../src/lookitsatravis/Listify/Exceptions/NullScopeException.php';
+require_once __DIR__ . '/../../../../src/lookitsatravis/Listify/Exceptions/InvalidScopeException.php';
+require_once __DIR__ . '/../../../../src/lookitsatravis/Listify/Exceptions/InvalidQueryBuilderException.php';
+
 use Way\Tests\Assert;
 
 class ListifyBaseTest extends TestCase {
@@ -45,7 +57,6 @@ class ListifyBaseTest extends TestCase {
     {
         parent::tearDown();
         
-        //Artisan::call('migrate:reset', array('--env' => 'testing'));
         $model = $this->model;
         $model::flushEventListeners();
     }
@@ -89,10 +100,9 @@ class ListifyBaseTest extends TestCase {
         $this->childAssertion();
     }
 
-    public function test_setListifyPositionUp()
+    public function test_setListPositionUp()
     {
-        $this->foos[1]->setListifyPosition(1);
-        $this->foos[1]->save();
+        $this->foos[1]->setListPosition(1);
 
         $this->reloadFoos();
 
@@ -113,10 +123,9 @@ class ListifyBaseTest extends TestCase {
         $this->childAssertion();
     }
 
-    public function test_setListifyPositionDown()
+    public function test_setListPositionDown()
     {
-        $this->foos[0]->setListifyPosition(2);
-        $this->foos[0]->save();
+        $this->foos[0]->setListPosition(2);
 
         $this->reloadFoos();
 
@@ -335,7 +344,7 @@ class ListifyBaseTest extends TestCase {
         $position = 1;
         foreach($this->foos as $foo)
         {
-            if($foo->name == $this->model . "1")
+            if($foo->id == 1)
                 Assert::eq(NULL, $foo->getListifyPosition());
             else
             {
@@ -515,6 +524,30 @@ class ListifyBaseTest extends TestCase {
         $foo->save();
 
         Assert::eq(1, $foo->getListifyPosition());
+    }
+
+    /**
+     * @expectedException lookitsatravis\Listify\Exceptions\InvalidScopeException
+     */
+    public function test_invalidScopeExceptionNonObject()
+    {
+        $foo = $this->model;
+        $foo = new $foo();
+        $foo->name = $this->model . "Test";
+        $foo->setListifyConfig('scope', 1);
+        $foo->save();
+    }
+
+    /**
+     * @expectedException lookitsatravis\Listify\Exceptions\InvalidScopeException
+     */
+    public function test_invalidScopeExceptionObject()
+    {
+        $foo = $this->model;
+        $foo = new $foo();
+        $foo->name = $this->model . "Test";
+        $foo->setListifyConfig('scope', App::make($this->model));
+        $foo->save();
     }
 
     protected function reloadFoos()

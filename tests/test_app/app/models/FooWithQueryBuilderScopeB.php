@@ -1,15 +1,17 @@
 <?php
 
-class Foo extends Eloquent 
+class FooWithQueryBuilderScopeB extends Eloquent 
 {
     use lookitsatravis\Listify\Listify;
+
+    protected $table ="foo_with_query_builder_scopes";
 
     /**
      * The fillable array lets laravel know which fields are fillable
      *
      * @var array
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'company'];
 
     /**
      * The rules array lets us know how to to validate this model
@@ -18,6 +20,7 @@ class Foo extends Eloquent
      */
     public $rules = [
         'name' => 'required',
+        'company' => 'required'
     ];
 
     /**
@@ -29,7 +32,9 @@ class Foo extends Eloquent
     public function __construct($attributes = array(), $exists = false)
     {    
         parent::__construct($attributes, $exists);
-        $this->initListify();
+        $this->initListify([
+            'scope' => DB::table($this->getTable())->where('company', '=', 'NOT_ACME')
+        ]);
     }
 
     public static function boot()

@@ -1,9 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../../../../src/lookitsatravis/Listify/Exceptions/ListifyException.php';
-require_once __DIR__ . '/../../../../src/lookitsatravis/Listify/Exceptions/NullForeignKeyException.php';
-require_once __DIR__ . '/../../../../src/lookitsatravis/Listify/Exceptions/NullScopeException.php';
-
 use Way\Tests\Assert;
 
 class ListifyModelWithBelongstoScopeTest extends ListifyBaseTest {
@@ -12,6 +8,7 @@ class ListifyModelWithBelongstoScopeTest extends ListifyBaseTest {
     protected $modelScopeValue = "foo_with_belongsto_scope_b_id = 1";
 
     private $modelB = 'FooWithBelongstoScopeB';
+    private $modelBScopeValue = "foo_with_belongsto_scope_b_id = 99";
 
     private $foreignKeyId;
 
@@ -63,6 +60,28 @@ class ListifyModelWithBelongstoScopeTest extends ListifyBaseTest {
         $foo->save();
     }
 
+    public function test_changeScopeBeforeUpdate()
+    {
+        $foo1 = App::make($this->model);
+        $foo1->name = $this->model . "Test1";
+        $foo1->foo_with_belongsto_scope_b_id = 19;
+        $foo1->save();
+
+        $foo2 = App::make($this->model);
+        $foo2->name = $this->model . "Test2";
+        $foo2->foo_with_belongsto_scope_b_id = 19;
+        $foo2->save();
+
+        Assert::eq(1, $foo1->getListifyPosition());
+        Assert::eq(2, $foo2->getListifyPosition());
+
+        $foo1->foo_with_belongsto_scope_b_id = 20;
+        $foo1->save();
+
+        Assert::eq(1, $foo1->getListifyPosition());
+        Assert::eq(2, $foo2->getListifyPosition());
+    }
+
     //The whole point of this is to validate that the secondary model (that shares the table) is not modified when manipulating the primary model. The scope should prevent that, so we validate that the secondary model has not changed after each test.
     protected function childAssertion()
     {
@@ -91,6 +110,6 @@ class ListifyModelWithBelongstoScopeTest extends ListifyBaseTest {
 
     private function reloadBFoos()
     {
-        $this->bfoos = App::make($this->model)->whereRaw('foo_with_belongsto_scope_b_id = 99')->orderBy('id', "ASC")->get()->all();
+        $this->bfoos = App::make($this->model)->whereRaw($this->modelBScopeValue)->orderBy('id', "ASC")->get()->all();
     }
 }

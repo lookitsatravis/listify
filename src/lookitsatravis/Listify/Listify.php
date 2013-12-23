@@ -5,6 +5,7 @@ use lookitsatravis\Listify\Exceptions\ListifyException;
 use lookitsatravis\Listify\Exceptions\NullForeignKeyException;
 use lookitsatravis\Listify\Exceptions\NullScopeException;
 use lookitsatravis\Listify\Exceptions\InvalidScopeException;
+use lookitsatravis\Listify\Exceptions\InvalidQueryBuilderException;
 
 /**
  * Gives some nice sorting features to a model.
@@ -24,7 +25,7 @@ trait Listify
      * Array of current config values
      * @var array
      */
-    private static $listifyConfig = [
+    private $listifyConfig = [
         'top_of_list' => 1,
         'column' => 'position',
         'scope' => '1 = 1',
@@ -35,31 +36,26 @@ trait Listify
      * Default scope of the list
      * @var string
      */
-    private static $defaultScope = '1 = 1';
+    private $defaultScope = '1 = 1';
 
     /**
      * Contains whether the original attributes are loaded on the model or not
      * @var boolean
      */
-    private static $originalAttributesLoaded = FALSE;
+    private $originalAttributesLoaded = FALSE;
 
     /**
      * Container for the changed attributes of the model
      * @var [type]
      */
-    private static $swappedAttributes = [];
+    private $swappedAttributes = [];
 
     /**
      * Contains the current raw scope string. Used to check for changes.
      * @var string
      */
-    private static $builderQueryString = '';
+    private $stringScopeValue = NULL;
 
-    /**
-     * Contains an overridden scope condition which will be used over the scope in the config (necessary for App:make calls)
-     * @var string
-     */
-    private $overrideScopeCondition = NULL;
 
     // Configuration options are:
     // * +column+ - specifies the column name to use for keeping the position integer (default: +position+)
@@ -81,7 +77,7 @@ trait Listify
     public function initListify($options = [])
     {
         //Update config with options
-        static::$listifyConfig = array_replace(static::$listifyConfig, $options);
+        $this->listifyConfig = array_replace($this->listifyConfig, $options);
     }
 
     /**
@@ -111,14 +107,14 @@ trait Listify
             $model->updatePositions();
         });
 
-        if(static::addNewAt() != NULL)
+        static::creating(function($model)
         {
-            static::creating(function($model)
+            if($model->addNewAt())
             {
-                $method_name = "addToList" . $model::addNewAt();
+                $method_name = "addToList" . $model->addNewAt();
                 $model->$method_name();
-            });
-        }
+            }
+        });
     }
 
     /**
@@ -127,9 +123,18 @@ trait Listify
      */
     private function hasScopeChanged()
     { 
-        $theScope = static::scopeName();
+        $theScope = $this->scopeName();
 
-        if(is_string($theScope)) return FALSE;
+        if(is_string($theScope))
+        {
+            if(!$this->stringScopeValue)
+            {
+                $this->stringScopeValue = $theScope;
+                return FALSE;
+            }
+
+            return $theScope != $this->stringScopeValue;
+        }
 
         $reflector = new \ReflectionClass($theScope);
         if($reflector->getName() == 'Illuminate\Database\Eloquent\Relations\BelongsTo')
@@ -139,10 +144,16 @@ trait Listify
 
             if($originalVal != $currentVal) return TRUE;    
         }
-        else if ($reflector->getName() == 'Illuminate\Database\Eloquent\Builder')
+        else if ($reflector->getName() == 'Illuminate\Database\Query\Builder')
         {
+            if(!$this->stringScopeValue)
+            {
+                $this->stringScopeValue = $this->getConditionStringFromQueryBuilder($theScope);
+                return FALSE;
+            }
+
             $theQuery = $this->getConditionStringFromQueryBuilder($theScope);
-            if($theQuery != static::$builderQueryString) return TRUE;
+            if($theQuery != $this->stringScopeValue) return TRUE;
         }
         
         return FALSE;
@@ -154,49 +165,52 @@ trait Listify
      */
     private function scopeCondition()
     {
-        $theScope = static::scopeName();
+        $theScope = $this->scopeName();
 
         if($theScope === NULL)
         {
             throw new NullScopeException('You cannot pass in a null scope into Listify. It breaks stuff.');
         }
 
-        if($this->overrideScopeCondition)
-        {
-            return $this->overrideScopeCondition;
-        }
-
-        if($theScope != static::$defaultScope)
+        if($theScope !== $this->defaultScope)
         {
             if(is_string($theScope))
             {
                 //Good for you for being brave. Let's hope it'll run in your DB! You sanitized it, right?
+                $this->stringScopeValue = $theScope;
             }
             else
             {
-                $reflector = new \ReflectionClass($theScope);
-                if($reflector->getName() == 'Illuminate\Database\Eloquent\Relations\BelongsTo')
+                if(is_object($theScope))
                 {
-                    $relationshipId = $this->getAttribute($theScope->getForeignKey());
-
-                    if($relationshipId === NULL)
+                    $reflector = new \ReflectionClass($theScope);
+                    if($reflector->getName() == 'Illuminate\Database\Eloquent\Relations\BelongsTo')
                     {
-                        throw new NullForeignKeyException('The Listify scope is a "belongsTo" relationship, but the foreign key is null.');
+                        $relationshipId = $this->getAttribute($theScope->getForeignKey());
+
+                        if($relationshipId === NULL)
+                        {
+                            throw new NullForeignKeyException('The Listify scope is a "belongsTo" relationship, but the foreign key is null.');
+                        }
+                        else
+                        {
+                            $theScope = $theScope->getForeignKey() . ' = ' . $this->getAttribute($theScope->getForeignKey());       
+                        }
+                    }
+                    else if ($reflector->getName() == 'Illuminate\Database\Query\Builder')
+                    {
+                        $theQuery = $this->getConditionStringFromQueryBuilder($theScope);
+                        $this->stringScopeValue = $theQuery;
+                        $theScope = $theQuery;
                     }
                     else
                     {
-                        $theScope = $theScope->getForeignKey() . ' = ' . $this->getAttribute($theScope->getForeignKey());       
+                        throw new InvalidScopeException('Listify scope parameter must be a String, an Eloquent BelongsTo object, or a Query Builder object.');
                     }
-                }
-                else if ($reflector->getName() == 'Illuminate\Database\Eloquent\Builder')
-                {
-                    $theQuery = $this->getConditionStringFromQueryBuilder($theScope);
-                    static::$builderQueryString = $theQuery;
-                    $theScope = $theQuery;
                 }
                 else
                 {
-                    throw new InvalidScopeException('Listify scope parameter must be a String, an Eloquent BelongsTo object, or an Eloquent Query Builder object.');
+                    throw new InvalidScopeException('Listify scope parameter must be a String, an Eloquent BelongsTo object, or a Query Builder object.');
                 }
             }
         }
@@ -205,23 +219,41 @@ trait Listify
     }
 
     /**
-     * Returns a raw WHERE clause based off of an Eloquent Query Builder object
-     * @param  $query An Eloquent Query Builder instance
+     * Returns a raw WHERE clause based off of a Query Builder object
+     * @param  $query A Query Builder instance
      * @return string
      */
     private function getConditionStringFromQueryBuilder($query)
     {
-        $initialQueryChunks = explode('where ', $query->getQuery()->toSql());
-        if($initialQueryChunks == 1) throw new InvalidQueryBuilderException('The Listify scope is an Eloquent Query Builder object, but it has no "where", so it can\'t be used as a scope.');
+        $initialQueryChunks = explode('where ', $query->toSql());
+        if(count($initialQueryChunks) == 1) throw new InvalidQueryBuilderException('The Listify scope is a Query Builder object, but it has no "where", so it can\'t be used as a scope.');
         $queryChunks = explode('?', $initialQueryChunks[1]);
-        $bindings = $query->getQuery()->getBindings();
+        $bindings = $query->getBindings();
 
         $theQuery = '';
 
         for($i = 0; $i < count($queryChunks); $i++)
         {
+            // "boolean"
+            // "integer"
+            // "double" (for historical reasons "double" is returned in case of a float, and not simply "float")
+            // "string"
+            // "array"
+            // "object"
+            // "resource"
+            // "NULL"
+            // "unknown type"
+
             $theQuery .= $queryChunks[$i];
-            if(isset($bindings[$i])) $theQuery .= $bindings[$i];
+            if(isset($bindings[$i]))
+            {
+                switch(gettype($bindings[$i]))
+                {
+                    case "string":
+                        $theQuery .= '"' . $bindings[$i] . '"';
+                        break;
+                }
+            }
         }
 
         return $theQuery;
@@ -244,16 +276,16 @@ trait Listify
      */
     public function scopeInList($query)
     {
-        return $query->listifyScope()->whereNotNull($this->getTable() . "." . static::positionColumn());
+        return $query->listifyScope()->whereNotNull($this->getTable() . "." . $this->positionColumn());
     }
 
     /**
      * Get the value of the "top_of_list" option
      * @return string
      */
-    public static function listifyTop()
+    public function listifyTop()
     {
-        return static::$listifyConfig['top_of_list'];
+        return $this->listifyConfig['top_of_list'];
     }
 
     /**
@@ -264,34 +296,34 @@ trait Listify
      */
     public function setListifyConfig($key, $value)
     {
-        static::$listifyConfig[$key] = $value;
+        $this->listifyConfig[$key] = $value;
     }
 
     /**
      * Get the name of the position 'column' option
      * @return string
      */
-    public static function positionColumn()
+    public function positionColumn()
     {
-        return static::$listifyConfig['column'];
+        return $this->listifyConfig['column'];
     }
 
     /**
      * Get the value of the 'scope' option
      * @return mixed Can be a string, an Eloquent BelongsTo, or an Eloquent Builder
      */
-    public static function scopeName()
+    public function scopeName()
     {
-        return static::$listifyConfig['scope'];
+        return $this->listifyConfig['scope'];
     }
 
     /**
      * Returns the value of the 'add_new_at' option
      * @return string
      */
-    public static function addNewAt()
+    public function addNewAt()
     {
-        return static::$listifyConfig['add_new_at'];
+        return $this->listifyConfig['add_new_at'];
     }
 
     /**
@@ -300,7 +332,7 @@ trait Listify
      */
     public function getListifyPosition()
     {
-        return $this->getAttribute(static::positionColumn());
+        return $this->getAttribute($this->positionColumn());
     }
 
     /**
@@ -310,7 +342,7 @@ trait Listify
      */
     public function setListifyPosition($position)
     {
-        $this->setAttribute(static::positionColumn(), $position);
+        $this->setAttribute($this->positionColumn(), $position);
     }
  
     /**
@@ -320,7 +352,7 @@ trait Listify
      */
     public function insertAt($position = NULL)
     {
-        if($position === NULL) $position = static::listifyTop();
+        if($position === NULL) $position = $this->listifyTop();
         $this->insertAtPosition($position);
     }
 
@@ -334,8 +366,8 @@ trait Listify
         
         DB::transaction(function()
         {
-            $this->lowerItem()->decrement(static::positionColumn());
-            $this->increment(static::positionColumn());
+            $this->lowerItem()->decrement($this->positionColumn());
+            $this->increment($this->positionColumn());
         });
     }
 
@@ -349,8 +381,8 @@ trait Listify
 
         DB::transaction(function()
         {
-            $this->higherItem()->increment(static::positionColumn());
-            $this->decrement(static::positionColumn());
+            $this->higherItem()->increment($this->positionColumn());
+            $this->decrement($this->positionColumn());
         });
     }
 
@@ -424,7 +456,7 @@ trait Listify
     public function isFirst()
     {
         if($this->isNotInList()) return FALSE;
-        if($this->getListifyPosition() == static::listifyTop()) return TRUE;
+        if($this->getListifyPosition() == $this->listifyTop()) return TRUE;
         return FALSE;
     }
 
@@ -448,8 +480,8 @@ trait Listify
         if($this->isNotInList()) return NULL;
 
         return $this->listifyList()
-            ->where(static::positionColumn(), "<", $this->getListifyPosition())
-            ->orderBy($this->getTable() . "." . static::positionColumn(), "DESC")
+            ->where($this->positionColumn(), "<", $this->getListifyPosition())
+            ->orderBy($this->getTable() . "." . $this->positionColumn(), "DESC")
             ->first();
     }
 
@@ -464,10 +496,10 @@ trait Listify
         $position_value = $this->getListifyPosition();
 
         return $this->listifyList()
-            ->where(static::positionColumn(), "<", $position_value)
-            ->where(static::positionColumn(), ">=", $position_value - $limit)
+            ->where($this->positionColumn(), "<", $position_value)
+            ->where($this->positionColumn(), ">=", $position_value - $limit)
             ->take($limit)
-            ->orderBy($this->getTable() . "." . static::positionColumn(), "ASC")
+            ->orderBy($this->getTable() . "." . $this->positionColumn(), "ASC")
             ->get();
     }
 
@@ -480,8 +512,8 @@ trait Listify
         if($this->isNotInList()) return NULL;
 
         return $this->listifyList()
-            ->where(static::positionColumn(), ">", $this->getListifyPosition())
-            ->orderBy($this->getTable() . "." . static::positionColumn(), "ASC")
+            ->where($this->positionColumn(), ">", $this->getListifyPosition())
+            ->orderBy($this->getTable() . "." . $this->positionColumn(), "ASC")
             ->first();
     }
 
@@ -496,10 +528,10 @@ trait Listify
         $position_value = $this->getListifyPosition();
 
         return $this->listifyList()
-            ->where(static::positionColumn(), '>', $position_value)
-            ->where(static::positionColumn(), '<=', $position_value + $limit)
+            ->where($this->positionColumn(), '>', $position_value)
+            ->where($this->positionColumn(), '<=', $position_value + $limit)
             ->take($limit)
-            ->orderBy($this->getTable() . "." . static::positionColumn(), "ASC")
+            ->orderBy($this->getTable() . "." . $this->positionColumn(), "ASC")
             ->get();
     }
 
@@ -550,16 +582,6 @@ trait Listify
         $this->save();
     }
 
-    /**
-     * Allows one to override the config's scope. Necessary to maintain scoping on dynamically instantiated models
-     * @param mixed
-     * @return void
-     */
-    public function overrideScope($scopeCondition)
-    {
-        $this->setListifyConfig('scope', $scopeCondition);
-    }
-
     /* Private Methods */
 
     /**
@@ -569,7 +591,7 @@ trait Listify
     private function listifyList()
     {
         $model = new self();
-        $model->overrideScope($this->scopeCondition());
+        $model->setListifyConfig('scope', $this->scopeCondition());
         
         return $model->listifyScope();
     }
@@ -581,7 +603,7 @@ trait Listify
     private function addToListTop()
     {
         $this->incrementPositionsOnAllItems();
-        $this->setListifyPosition(static::listifyTop());
+        $this->setListifyPosition($this->listifyTop());
     }
 
     /**
@@ -608,7 +630,7 @@ trait Listify
         if($item)
             return $item->getListifyPosition();
         else
-            return static::listifyTop() - 1;
+            return $this->listifyTop() - 1;
     }
 
     /**
@@ -626,9 +648,9 @@ trait Listify
         }
 
         $list = $this->listifyList()
-            ->whereNotNull($this->getTable() . "." . static::positionColumn())
+            ->whereNotNull($this->getTable() . "." . $this->positionColumn())
             ->whereRaw($conditions)
-            ->orderBy($this->getTable() . "." . static::positionColumn(), "DESC")
+            ->orderBy($this->getTable() . "." . $this->positionColumn(), "DESC")
             ->take(1)->first();
 
         return $list;
@@ -658,7 +680,7 @@ trait Listify
      */
     private function assumeTopPosition()
     {
-        $this->setListPosition(static::listifyTop());
+        $this->setListPosition($this->listifyTop());
     }
 
     /**
@@ -672,8 +694,8 @@ trait Listify
         if($position === NULL) $position = $this->getListifyPosition();
 
         $this->listifyList()
-           ->where(static::positionColumn(), '>', $position)
-           ->decrement(static::positionColumn());
+           ->where($this->positionColumn(), '>', $position)
+           ->decrement($this->positionColumn());
     }
 
     /**
@@ -685,8 +707,8 @@ trait Listify
         if($this->isNotInList()) return NULL;
 
         $this->listifyList()
-           ->where(static::positionColumn(), '<', $this->getListifyPosition())
-           ->increment(static::positionColumn());
+           ->where($this->positionColumn(), '<', $this->getListifyPosition())
+           ->increment($this->positionColumn());
     }
 
     /**
@@ -697,8 +719,8 @@ trait Listify
     private function incrementPositionsOnLowerItems($position)
     {
         $this->listifyList()
-            ->where(static::positionColumn(), '>=', $position)
-            ->increment(static::positionColumn());        
+            ->where($this->positionColumn(), '>=', $position)
+            ->increment($this->positionColumn());        
     }
 
     /**
@@ -708,7 +730,7 @@ trait Listify
     private function incrementPositionsOnAllItems()
     {
         $this->listifyList()
-            ->increment(static::positionColumn());
+            ->increment($this->positionColumn());
     }
 
     /**
@@ -731,10 +753,10 @@ trait Listify
             // move [3, 4, 5] to [2, 3, 4]
 
             $this->listifyList()
-                ->where(static::positionColumn(), '>', $old_position)
-                ->where(static::positionColumn(), '<=', $new_position)
+                ->where($this->positionColumn(), '>', $old_position)
+                ->where($this->positionColumn(), '<=', $new_position)
                 ->whereRaw($avoid_id_condition)
-                ->decrement(static::positionColumn());
+                ->decrement($this->positionColumn());
         }
         else
         {
@@ -744,10 +766,10 @@ trait Listify
             // move [2, 3, 4] to [3, 4, 5]
 
             $this->listifyList()
-                ->where(static::positionColumn(), '>=', $new_position)
-                ->where(static::positionColumn(), '<', $old_position)
+                ->where($this->positionColumn(), '>=', $new_position)
+                ->where($this->positionColumn(), '<', $old_position)
                 ->whereRaw($avoid_id_condition)
-                ->increment(static::positionColumn());
+                ->increment($this->positionColumn());
         }
     }
 
@@ -779,13 +801,13 @@ trait Listify
      */
     private function updatePositions()
     {
-        $old_position = $this->getOriginal()[static::positionColumn()];
+        $old_position = $this->getOriginal()[$this->positionColumn()];
         $new_position = $this->getListifyPosition();
 
         if($new_position === NULL)
             $matching_position_records = 0;
         else
-            $matching_position_records = $this->listifyList()->where(static::positionColumn(), '=', $new_position)->count();
+            $matching_position_records = $this->listifyList()->where($this->positionColumn(), '=', $new_position)->count();
 
         if($matching_position_records <= 1)
         {
@@ -801,17 +823,17 @@ trait Listify
      */
     public function swapChangedAttributes()
     {
-        if(static::$originalAttributesLoaded === FALSE)
+        if($this->originalAttributesLoaded === FALSE)
         {
-            static::$swappedAttributes = $this->getAttributes();
+            $this->swappedAttributes = $this->getAttributes();
             $this->fill($this->getOriginal());
-            static::$originalAttributesLoaded = TRUE;
+            $this->originalAttributesLoaded = TRUE;
         }
         else
         {
-            if(count(static::$swappedAttributes) == 0) static::$swappedAttributes = $this->getAttributes();
-            $this->fill(static::$swappedAttributes);
-            static::$originalAttributesLoaded = FALSE;
+            if(count($this->swappedAttributes) == 0) $this->swappedAttributes = $this->getAttributes();
+            $this->fill($this->swappedAttributes);
+            $this->originalAttributesLoaded = FALSE;
         }
     }
 
@@ -826,7 +848,7 @@ trait Listify
             $this->swapChangedAttributes();
             if($this->lowerItem()) $this->decrementPositionsOnLowerItems();
             $this->swapChangedAttributes();
-            $method_name = "addToList" . static::addNewAt();
+            $method_name = "addToList" . $this->addNewAt();
             $this->$method_name();
         }
     }
@@ -837,6 +859,6 @@ trait Listify
      */
     private function reloadPosition()
     {
-        $this->setListifyPosition($this->getOriginal()[static::positionColumn()]);
+        $this->setListifyPosition($this->getOriginal()[$this->positionColumn()]);
     }
 }

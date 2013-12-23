@@ -252,7 +252,6 @@ The `position` column is set after validations are called, so you should not put
 ## Future Plans
 
 - Update `Illuminate\Database\Query\Builder` scope to be more secure and flexible
-- 
 - Additional features for the install command. Things like:
     - update the model with trait automatically (including init method in constructor and boot method for events)
     - generate (or add to) a controller with actions for each public method for `Listify`, including adding necessary routes. This would make it easy to, say, call something like `http://localhost:8000/foos/1/move_lower` through an AJAX-y front end.

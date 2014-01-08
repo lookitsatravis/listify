@@ -1,7 +1,7 @@
 {
     "name": "lookitsatravis/listify",
     "description": "Turn any Eloquent model into a list! http://lookitsatravis.github.io/listify",
-    "keywords": ["laravel", "model", "list", "position", "acts_as_list", "rails", "list"],
+    "keywords": ["laravel", "model", "position", "acts_as_list", "rails", "list", "eloquent", "order"],
     "license": "MIT",
     "authors": [
         {

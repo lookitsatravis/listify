@@ -60,7 +60,7 @@ Then, in your model:
 ```php
 class User extends Eloquent
 {
-    use lookitsatravis\Listify\listify;
+    use \lookitsatravis\Listify\listify;
 
     public function __construct(array $attributes = array(), $exists = false) {
 

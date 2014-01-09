@@ -1,4 +1,4 @@
-<?php namespace lookitsatravis\Listify\Exceptions;
+<?php namespace Lookitsatravis\Listify\Exceptions;
 
 use Exception;
 

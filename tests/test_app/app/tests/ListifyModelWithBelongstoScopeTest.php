@@ -38,7 +38,7 @@ class ListifyModelWithBelongstoScopeTest extends ListifyBaseTest {
     }
 
     /**
-     * @expectedException lookitsatravis\Listify\Exceptions\NullScopeException
+     * @expectedException Lookitsatravis\Listify\Exceptions\NullScopeException
      */
     public function test_passInNullScopeThrowsError()
     {
@@ -50,7 +50,7 @@ class ListifyModelWithBelongstoScopeTest extends ListifyBaseTest {
     }
 
     /**
-     * @expectedException lookitsatravis\Listify\Exceptions\NullForeignKeyException
+     * @expectedException Lookitsatravis\Listify\Exceptions\NullForeignKeyException
      */
     public function test_passInNullScopeWithForeignKeyThrowsError()
     {

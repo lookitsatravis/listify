@@ -1,4 +1,4 @@
-<?php namespace lookitsatravis\Listify;
+<?php namespace Lookitsatravis\Listify;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -18,7 +18,7 @@ class ListifyServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('lookitsatravis/listify');
+		$this->package('Lookitsatravis/listify');
 	}
 
 	/**

@@ -2,7 +2,7 @@
 
 class Foo extends Eloquent 
 {
-    use lookitsatravis\Listify\Listify;
+    use Lookitsatravis\Listify\Listify;
 
     /**
      * The fillable array lets laravel know which fields are fillable

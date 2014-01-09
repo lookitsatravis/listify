@@ -1,13 +1,13 @@
 {
-    "name": "lookitsatravis/listify",
-    "description": "Turn any Eloquent model into a list! http://lookitsatravis.github.io/listify",
+    "name": "Lookitsatravis/listify",
+    "description": "Turn any Eloquent model into a list! http://Lookitsatravis.github.io/listify",
     "keywords": ["laravel", "model", "position", "acts_as_list", "rails", "list", "eloquent", "order"],
     "license": "MIT",
     "authors": [
         {
             "name": "Travis Vignon",
-            "email": "travis@lookitsatravis.com",
-            "homepage": "http://lookitsatravis.com"
+            "email": "travis@Lookitsatravis.com",
+            "homepage": "http://Lookitsatravis.com"
         }
     ],
     "require": {
@@ -22,7 +22,7 @@
             "src/migrations"
         ],
         "psr-0": {
-            "lookitsatravis\\Listify": "src/"
+            "Lookitsatravis\\Listify": "src/"
         }
     },
     "minimum-stability": "dev"

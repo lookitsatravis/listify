@@ -31,7 +31,7 @@ Turn any Eloquent model into a list!
 
 Install the package using Composer.  Edit your project's `composer.json` file to require `lookitsatravis/listify`.
 
-```js
+```json
   "require": {
     "laravel/framework": "4.x",
     "lookitsatravis/listify": "1.0.x"
@@ -41,7 +41,7 @@ Install the package using Composer.  Edit your project's `composer.json` file to
 Once this operation completes, the final step is to add the service provider. Open `app/config/app.php`, and add a new item to the providers array.
 
 ```php
-    'lookitsatravis\Listify\ListifyServiceProvider' 
+    'Lookitsatravis\Listify\ListifyServiceProvider' 
 ```
 
 ## Quickstart
@@ -60,7 +60,7 @@ Then, in your model:
 ```php
 class User extends Eloquent
 {
-    use \lookitsatravis\Listify\listify;
+    use \Lookitsatravis\Listify\listify;
 
     public function __construct(array $attributes = array(), $exists = false) {
 
@@ -140,7 +140,7 @@ Example:
 ```php
 class User extends Eloquent
 {
-    use lookitsatravis\Listify\listify;
+    use Lookitsatravis\Listify\listify;
 
     public function __construct(array $attributes = array(), $exists = false) {
 
@@ -175,7 +175,7 @@ Example:
 ```php
 class ToDoListItem extends Eloquent
 {
-    use lookitsatravis\Listify\listify;
+    use Lookitsatravis\Listify\listify;
 
     public function __construct(array $attributes = array(), $exists = false) {
 
@@ -217,7 +217,7 @@ Example:
 ```php
 class ToDoListItem extends Eloquent
 {
-    use lookitsatravis\Listify\listify;
+    use Lookitsatravis\Listify\listify;
 
     public function __construct(array $attributes = array(), $exists = false) {
 

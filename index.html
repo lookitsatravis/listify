@@ -78,7 +78,7 @@
 
 <p>Once this operation completes, the final step is to add the service provider. Open <code>app/config/app.php</code>, and add a new item to the providers array.</p>
 
-<div class="highlight highlight-php"><pre>    <span class="s1">'lookitsatravis\Listify\ListifyServiceProvider'</span> 
+<div class="highlight highlight-php"><pre>    <span class="s1">'Lookitsatravis\Listify\ListifyServiceProvider'</span> 
 </pre></div>
 
 <h2>
@@ -98,7 +98,7 @@
 
 <div class="highlight highlight-php"><pre><span class="k">class</span> <span class="nc">User</span> <span class="k">extends</span> <span class="nx">Eloquent</span>
 <span class="p">{</span>
-    <span class="k">use</span> <span class="nx">lookitsatravis\Listify\listify</span><span class="p">;</span>
+    <span class="k">use</span> <span class="nx">\Lookitsatravis\Listify\listify</span><span class="p">;</span>
 
     <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="k">array</span> <span class="nv">$attributes</span> <span class="o">=</span> <span class="k">array</span><span class="p">(),</span> <span class="nv">$exists</span> <span class="o">=</span> <span class="k">false</span><span class="p">)</span> <span class="p">{</span>
 
@@ -201,7 +201,7 @@
 
 <div class="highlight highlight-php"><pre><span class="k">class</span> <span class="nc">User</span> <span class="k">extends</span> <span class="nx">Eloquent</span>
 <span class="p">{</span>
-    <span class="k">use</span> <span class="nx">lookitsatravis\Listify\listify</span><span class="p">;</span>
+    <span class="k">use</span> <span class="nx">\Lookitsatravis\Listify\listify</span><span class="p">;</span>
 
     <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="k">array</span> <span class="nv">$attributes</span> <span class="o">=</span> <span class="k">array</span><span class="p">(),</span> <span class="nv">$exists</span> <span class="o">=</span> <span class="k">false</span><span class="p">)</span> <span class="p">{</span>
 
@@ -234,7 +234,7 @@
 
 <div class="highlight highlight-php"><pre><span class="k">class</span> <span class="nc">ToDoListItem</span> <span class="k">extends</span> <span class="nx">Eloquent</span>
 <span class="p">{</span>
-    <span class="k">use</span> <span class="nx">lookitsatravis\Listify\listify</span><span class="p">;</span>
+    <span class="k">use</span> <span class="nx">\Lookitsatravis\Listify\listify</span><span class="p">;</span>
 
     <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="k">array</span> <span class="nv">$attributes</span> <span class="o">=</span> <span class="k">array</span><span class="p">(),</span> <span class="nv">$exists</span> <span class="o">=</span> <span class="k">false</span><span class="p">)</span> <span class="p">{</span>
 
@@ -274,7 +274,7 @@
 
 <div class="highlight highlight-php"><pre><span class="k">class</span> <span class="nc">ToDoListItem</span> <span class="k">extends</span> <span class="nx">Eloquent</span>
 <span class="p">{</span>
-    <span class="k">use</span> <span class="nx">lookitsatravis\Listify\listify</span><span class="p">;</span>
+    <span class="k">use</span> <span class="nx">\Lookitsatravis\Listify\listify</span><span class="p">;</span>
 
     <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="k">array</span> <span class="nv">$attributes</span> <span class="o">=</span> <span class="k">array</span><span class="p">(),</span> <span class="nv">$exists</span> <span class="o">=</span> <span class="k">false</span><span class="p">)</span> <span class="p">{</span>
 

@@ -1,17 +1,5 @@
 <?php
 
-/*
-This is here because the files aren't being autoloaded by PHPUnit due to the scope of the testing.
-If you have a better idea, I'm all ears! travis@lookitsatravis.com
- */
-
-require_once __DIR__ . '/../../../../src/Lookitsatravis/Listify/Listify.php';
-require_once __DIR__ . '/../../../../src/Lookitsatravis/Listify/Exceptions/ListifyException.php';
-require_once __DIR__ . '/../../../../src/Lookitsatravis/Listify/Exceptions/NullForeignKeyException.php';
-require_once __DIR__ . '/../../../../src/Lookitsatravis/Listify/Exceptions/NullScopeException.php';
-require_once __DIR__ . '/../../../../src/Lookitsatravis/Listify/Exceptions/InvalidScopeException.php';
-require_once __DIR__ . '/../../../../src/Lookitsatravis/Listify/Exceptions/InvalidQueryBuilderException.php';
-
 use Way\Tests\Assert;
 
 class ListifyBaseTest extends TestCase {

@@ -15,5 +15,5 @@ script:
   - mkdir -p build/logs
   - phpunit
 
-after_script:
-  - php vendor/bin/coveralls
+#after_script:
+#  - php vendor/bin/coveralls

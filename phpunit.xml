@@ -22,7 +22,7 @@
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <file>src/lookitsatravis/Listify/Listify.php</file>
+            <file>src/Lookitsatravis/Listify/Listify.php</file>
         </whitelist>
     </filter>
 

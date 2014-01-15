@@ -2,7 +2,7 @@
 
 class FooWithStringScopeA extends Eloquent 
 {
-    use lookitsatravis\Listify\Listify;
+    use \Lookitsatravis\Listify\Listify;
 
     protected $table ="foo_with_string_scopes";
 

@@ -2,7 +2,7 @@
 
 class FooWithQueryBuilderScopeB extends Eloquent 
 {
-    use lookitsatravis\Listify\Listify;
+    use \Lookitsatravis\Listify\Listify;
 
     protected $table ="foo_with_query_builder_scopes";
 

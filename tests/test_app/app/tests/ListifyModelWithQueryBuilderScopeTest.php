@@ -38,7 +38,7 @@ class ListifyModelWithQueryBuilderScopeTest extends ListifyBaseTest {
     }
 
     /**
-     * @expectedException lookitsatravis\Listify\Exceptions\InvalidQueryBuilderException
+     * @expectedException \Lookitsatravis\Listify\Exceptions\InvalidQueryBuilderException
      */
     public function test_passScopeInWithMissingWhere()
     {

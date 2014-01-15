@@ -1,4 +1,4 @@
-<?php namespace lookitsatravis\Listify;
+<?php namespace Lookitsatravis\Listify;
 
 use Illuminate\Support\ServiceProvider;
 

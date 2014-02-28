@@ -10,7 +10,7 @@
     }],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/foundation": "4.x"
+        "laravel/framework": "4.1.*"
     },
     "require-dev": {
         "satooshi/php-coveralls": "dev-master"

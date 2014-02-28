@@ -21,7 +21,7 @@
     </php>
 
     <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
+        <whitelist processUncoveredFilesFromWhitelist="true" addUncoveredFilesFromWhitelist="false">
             <file>src/Lookitsatravis/Listify/Listify.php</file>
         </whitelist>
     </filter>

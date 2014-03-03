@@ -44,6 +44,12 @@ Once this operation completes, the final step is to add the service provider. Op
     'Lookitsatravis\Listify\ListifyServiceProvider' 
 ```
 
+Optionally, you can define an alias to the `Listify` trait. Open `app/config/app.php`, and add a new item to the aliases array.
+
+```php
+    'Listify' => 'Lookitsatravis\Listify\Listify'
+```
+
 ## Quickstart
 
 First things first, you'll need to add a column to store the position. From the command line, use the migration generator:
@@ -60,7 +66,7 @@ Then, in your model:
 ```php
 class User extends Eloquent
 {
-    use \Lookitsatravis\Listify\listify;
+    use \Lookitsatravis\Listify\Listify;
 
     public function __construct(array $attributes = array(), $exists = false) {
 
@@ -140,7 +146,7 @@ Example:
 ```php
 class User extends Eloquent
 {
-    use \Lookitsatravis\Listify\listify;
+    use \Lookitsatravis\Listify\Listify;
 
     public function __construct(array $attributes = array(), $exists = false) {
 
@@ -175,7 +181,7 @@ Example:
 ```php
 class ToDoListItem extends Eloquent
 {
-    use \Lookitsatravis\Listify\listify;
+    use \Lookitsatravis\Listify\Listify;
 
     public function __construct(array $attributes = array(), $exists = false) {
 
@@ -217,7 +223,7 @@ Example:
 ```php
 class ToDoListItem extends Eloquent
 {
-    use \Lookitsatravis\Listify\listify;
+    use \Lookitsatravis\Listify\Listify;
 
     public function __construct(array $attributes = array(), $exists = false) {
 

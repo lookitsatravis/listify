@@ -44,6 +44,12 @@ Once this operation completes, the final step is to add the service provider. Op
     'Lookitsatravis\Listify\ListifyServiceProvider'
 ```
 
+Optionally, you can define an alias to the `Listify` trait. Open `app/config/app.php`, and add a new item to the aliases array.
+
+```php
+    'Listify' => 'Lookitsatravis\Listify\Listify'
+```
+
 ## Quickstart
 
 First things first, you'll need to add a column to store the position. From the command line, use the migration generator:

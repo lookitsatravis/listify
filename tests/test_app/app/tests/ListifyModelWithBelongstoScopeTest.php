@@ -27,7 +27,7 @@ class ListifyModelWithBelongstoScopeTest extends ListifyBaseTest {
         parent::setUp();
 
         //Now we setup the secondary records which will be out of scope and should remain unchanged throughout modification
-        
+
         for($i = 1; $i <= 10; $i++)
         {
             $foo = App::make($this->model);

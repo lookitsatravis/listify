@@ -9,7 +9,7 @@ function application_autoloader($class) {
 
     $directories = new RecursiveDirectoryIterator($class_root);
     foreach(new RecursiveIteratorIterator($directories) as $file) {
-        
+
         if (strtolower("Lookitsatravis\\listify\\".$file->getFilename()) == $class_filename) {
             $full_path = $file->getRealPath();
             require_once $full_path;
@@ -29,5 +29,5 @@ function application_autoloader($class) {
         }
     }
 }
- 
+
 spl_autoload_register('application_autoloader');

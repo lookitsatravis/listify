@@ -1,6 +1,6 @@
 <?php
 
-class FooWithStringScopeA extends Eloquent 
+class FooWithStringScopeA extends Eloquent
 {
     use \Lookitsatravis\Listify\Listify;
 
@@ -25,12 +25,12 @@ class FooWithStringScopeA extends Eloquent
 
     /**
      * __construct method
-     * 
+     *
      * @param array   $attributes - An array of attributes to initialize the model with
      * @param boolean $exists     - Boolean flag to indicate if the model exists or not
      */
     public function __construct($attributes = array(), $exists = false)
-    {    
+    {
         parent::__construct($attributes, $exists);
         $this->initListify([
             'scope' => "company = 'companyA'"

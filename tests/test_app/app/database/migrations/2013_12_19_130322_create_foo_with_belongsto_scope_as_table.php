@@ -10,7 +10,7 @@ class CreateFooWithBelongstoScopeAsTable extends Migration {
      * @return void
      */
     public function up()
-    {   
+    {
         Schema::create('foo_with_belongsto_scope_as', function($table)
         {
             $table->increments('id');

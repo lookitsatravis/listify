@@ -32,7 +32,7 @@ class ListifyModelWithQueryBuilderScopeTest extends ListifyBaseTest {
     public function tearDown()
     {
         parent::tearDown();
-        
+
         $modelB = $this->modelB;
         $modelB::flushEventListeners();
     }

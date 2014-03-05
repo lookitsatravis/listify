@@ -1,6 +1,6 @@
 <?php
 
-class Foo extends Eloquent 
+class Foo extends Eloquent
 {
     use \Lookitsatravis\Listify\Listify;
 
@@ -22,12 +22,12 @@ class Foo extends Eloquent
 
     /**
      * __construct method
-     * 
+     *
      * @param array   $attributes - An array of attributes to initialize the model with
      * @param boolean $exists     - Boolean flag to indicate if the model exists or not
      */
     public function __construct($attributes = array(), $exists = false)
-    {    
+    {
         parent::__construct($attributes, $exists);
         $this->initListify();
     }

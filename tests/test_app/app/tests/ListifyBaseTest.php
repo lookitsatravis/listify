@@ -44,7 +44,7 @@ class ListifyBaseTest extends TestCase {
     public function tearDown()
     {
         parent::tearDown();
-        
+
         $model = $this->model;
         $model::flushEventListeners();
     }
@@ -64,13 +64,13 @@ class ListifyBaseTest extends TestCase {
     public function test_inListScope()
     {
         $allFoos = $this->foos[0]->inList()->get();
-        
+
         Assert::eq(10, count($allFoos));
 
         $this->foos[9]->delete();
 
         $allFoos = $this->foos[0]->inList()->get();
-        
+
         Assert::eq(9, count($allFoos));
 
         $this->childAssertion();
@@ -161,7 +161,7 @@ class ListifyBaseTest extends TestCase {
 
             if($position == 11) break; //There aren't any more records after 10
         }
-        
+
         $this->childAssertion();
     }
 

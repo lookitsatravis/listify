@@ -10,7 +10,7 @@ class CreateFooWithStringScopesTable extends Migration {
 	 * @return void
 	 */
 	public function up()
-	{	
+	{
 		Schema::create('foo_with_string_scopes', function($table)
 		{
 			$table->increments('id');

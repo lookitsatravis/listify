@@ -10,7 +10,7 @@ class CreateFooWithQueryBuilderScopesTable extends Migration {
      * @return void
      */
     public function up()
-    {   
+    {
         Schema::create('foo_with_query_builder_scopes', function($table)
         {
             $table->increments('id');

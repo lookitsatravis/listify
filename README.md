@@ -35,13 +35,13 @@ Install the package using Composer.  Edit your project's `composer.json` file to
   "require": {
     "laravel/framework": "4.x",
     "lookitsatravis/listify": "1.0.x"
-  }  
+  }
 ```
 
 Once this operation completes, the final step is to add the service provider. Open `app/config/app.php`, and add a new item to the providers array.
 
 ```php
-    'Lookitsatravis\Listify\ListifyServiceProvider' 
+    'Lookitsatravis\Listify\ListifyServiceProvider'
 ```
 
 ## Quickstart
@@ -60,7 +60,7 @@ Then, in your model:
 ```php
 class User extends Eloquent
 {
-    use \Lookitsatravis\Listify\listify;
+    use \Lookitsatravis\Listify\Listify;
 
     public function __construct(array $attributes = array(), $exists = false) {
 
@@ -68,17 +68,10 @@ class User extends Eloquent
 
         $this->initListify();
     }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::bootListify();
-    }
 }
 ```
 
-> Make sure that the `initListify()` method is called *after* `parent::__construct()` of your model, and that `static::bootListify()` is called *after* `parent::boot()`.
+> Make sure that the `initListify()` method is called *after* `parent::__construct()` of your model.
 
 That's all it takes to get access to the `Listify` hotness.
 
@@ -86,7 +79,7 @@ That's all it takes to get access to the `Listify` hotness.
 
 ### Instance Methods Added To Eloquent Models
 
-You'll have a number of methods added to each instance of the Eloquent model to which `Listify` is added. 
+You'll have a number of methods added to each instance of the Eloquent model to which `Listify` is added.
 
 In `Listify`, "higher" means further up the list (a lower `position`), and "lower" means further down the list (a higher `position`). That can be confusing, so it might make sense to add tests that validate that you're using the right method given your context.
 
@@ -140,7 +133,7 @@ Example:
 ```php
 class User extends Eloquent
 {
-    use \Lookitsatravis\Listify\listify;
+    use \Lookitsatravis\Listify\Listify;
 
     public function __construct(array $attributes = array(), $exists = false) {
 
@@ -149,13 +142,6 @@ class User extends Eloquent
         $this->initListify([
             'scope' => 'answer_to_ltuae = 42'
         ]);
-    }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::bootListify();
     }
 }
 ```
@@ -175,7 +161,7 @@ Example:
 ```php
 class ToDoListItem extends Eloquent
 {
-    use \Lookitsatravis\Listify\listify;
+    use \Lookitsatravis\Listify\Listify;
 
     public function __construct(array $attributes = array(), $exists = false) {
 
@@ -186,16 +172,9 @@ class ToDoListItem extends Eloquent
         ]);
     }
 
-    public static function boot()
-    {
-        parent::boot();
-
-        static::bootListify();
-    }
-
     public function toDoList()
     {
-        $this->belongsTo('ToDoList'); 
+        $this->belongsTo('ToDoList');
     }
 }
 ```
@@ -217,7 +196,7 @@ Example:
 ```php
 class ToDoListItem extends Eloquent
 {
-    use \Lookitsatravis\Listify\listify;
+    use \Lookitsatravis\Listify\Listify;
 
     public function __construct(array $attributes = array(), $exists = false) {
 
@@ -227,13 +206,6 @@ class ToDoListItem extends Eloquent
             'scope' => DB::table($this->getTable())->where('type', '=', 'Not A List of My Favorite Porn Videos')
         ]);
     }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::bootListify();
-    }
 }
 ```
 
@@ -241,6 +213,17 @@ Results in a scope of:
 
 `to_do_list_items.type = 'Not A List of My Favorite Porn Videos'`
 
+***
+
+### Changing the configuration
+
+You may also change any configuration value during runtime by using `$this->setListifyConfig('key', 'value');`. For example, to change the scope, you can do this:
+
+```php
+$this->setListifyConfig('scope', 'what_does_the_fox_say = "ring ding ding ding"');
+```
+
+When an update is processed, the original scope will be used to remove the record from that list, and insert it into the new list scope. *Be careful here*. Changing the configuration during processing can have unpredictable effects.
 
 ## Notes
 
@@ -248,9 +231,30 @@ All `position` queries (select, update, etc.) inside trait methods are executed 
 
 The `position` column is set after validations are called, so you should not put a `presence` validation on the `position` column.
 
+`Listify` boots the Eloquent model on it's own in order to set event handlers. If you need to override a model's static `boot` method, you'll need to make sure to boot `Listify` as well.
+
+```php
+
+class BootExample extends Eloquent
+{
+    ...
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::bootListify();
+    }
+
+    ...
+}
+```
+
+> Make sure that `static::bootListify()` is called *after* `parent::boot()`.
 
 ## Future Plans
 
+- Add support for using a closure as a scope
 - Update `Illuminate\Database\Query\Builder` scope to be more secure and flexible
 - Additional features for the install command. Things like:
     - update the model with trait automatically (including init method in constructor and boot method for events)
@@ -259,7 +263,7 @@ The `position` column is set after validations are called, so you should not put
 Aside from that, I hope to just keep in parity with the Ruby gem `acts_as_list` (https://github.com/swanandp/acts_as_list) as necessary.
 
 ## Contributing to `Listify`
- 
+
 - Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
 - Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
 - Fork the project
@@ -271,4 +275,4 @@ Aside from that, I hope to just keep in parity with the Ruby gem `acts_as_list` 
 
 ## Copyright
 
-Copyright (c) 2013 Travis Vignon, released under the MIT license
+Copyright (c) 2013-2014 Travis Vignon, released under the MIT license

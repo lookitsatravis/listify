@@ -10,13 +10,13 @@ use Lookitsatravis\Listify\Exceptions\InvalidQueryBuilderException;
 /**
  * Gives some nice sorting features to a model.
  * http://lookitsatravis.github.io/listify
- * 
+ *
  * Ported from https://github.com/swanandp/acts_as_list
- * 
+ *
  * @package lookitsatravis/listify
- * @version 1.0.2
+ * @version 1.0.4
  * @author Travis Vignon <travis@lookitsatravis.com>
- * @link    
+ * @link
  */
 
 trait Listify
@@ -46,7 +46,7 @@ trait Listify
 
     /**
      * Container for the changed attributes of the model
-     * @var [type]
+     * @var array
      */
     private $swappedAttributes = [];
 
@@ -67,8 +67,8 @@ trait Listify
     // act more like an array in its indexing.
     // * +add_new_at+ - specifies whether objects get added to the :top or :bottom of the list. (default: +bottom+)
     //                 `nil` will result in new items not being added to the list on create
-    //                 
-    
+    //
+
     /**
      * Required to override options and kick off the Listify's automatic list management.
      * @param  array $options [column=>string, scope=>string|BelongsTo|Builder, top_of_list=>int, add_new_at=>string]
@@ -78,6 +78,18 @@ trait Listify
     {
         //Update config with options
         $this->listifyConfig = array_replace($this->listifyConfig, $options);
+    }
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::bootListify();
     }
 
     /**
@@ -122,7 +134,7 @@ trait Listify
      * @return boolean
      */
     private function hasScopeChanged()
-    { 
+    {
         $theScope = $this->scopeName();
 
         if(is_string($theScope))
@@ -142,7 +154,7 @@ trait Listify
             $originalVal = $this->getOriginal()[$theScope->getForeignKey()];
             $currentVal = $this->getAttribute($theScope->getForeignKey());
 
-            if($originalVal != $currentVal) return TRUE;    
+            if($originalVal != $currentVal) return TRUE;
         }
         else if ($reflector->getName() == 'Illuminate\Database\Query\Builder')
         {
@@ -155,7 +167,7 @@ trait Listify
             $theQuery = $this->getConditionStringFromQueryBuilder($theScope);
             if($theQuery != $this->stringScopeValue) return TRUE;
         }
-        
+
         return FALSE;
     }
 
@@ -194,7 +206,7 @@ trait Listify
                         }
                         else
                         {
-                            $theScope = $theScope->getForeignKey() . ' = ' . $this->getAttribute($theScope->getForeignKey());       
+                            $theScope = $theScope->getForeignKey() . ' = ' . $this->getAttribute($theScope->getForeignKey());
                         }
                     }
                     else if ($reflector->getName() == 'Illuminate\Database\Query\Builder')
@@ -260,7 +272,7 @@ trait Listify
     }
 
     /**
-     * An Eloquent scope based on the processed scope option 
+     * An Eloquent scope based on the processed scope option
      * @param  $query An Eloquent Query Builder instance
      * @return Eloquent Query Builder instance
      */
@@ -271,7 +283,7 @@ trait Listify
 
     /**
      * An Eloquent scope that returns only items currently in the list
-     * @param $query 
+     * @param $query
      * @return Eloquent Query Builder instance
      */
     public function scopeInList($query)
@@ -337,14 +349,14 @@ trait Listify
 
     /**
      * Sets the value of the model's position
-     * @param int $position 
+     * @param int $position
      * @return void
      */
     public function setListifyPosition($position)
     {
         $this->setAttribute($this->positionColumn(), $position);
     }
- 
+
     /**
      * Insert the item at the given position (defaults to the top position of 1).
      * @param  int $position
@@ -363,7 +375,7 @@ trait Listify
     public function moveLower()
     {
         if(!$this->lowerItem()) return;
-        
+
         DB::transaction(function()
         {
             $this->lowerItem()->decrement($this->positionColumn());
@@ -573,7 +585,7 @@ trait Listify
 
     /**
      * Sets the new position and saves it
-     * @param int $new_position 
+     * @param int $new_position
      * @return void
      */
     public function setListPosition($new_position)
@@ -592,7 +604,7 @@ trait Listify
     {
         $model = new self();
         $model->setListifyConfig('scope', $this->scopeCondition());
-        
+
         return $model->listifyScope();
     }
 
@@ -720,7 +732,7 @@ trait Listify
     {
         $this->listifyList()
             ->where($this->positionColumn(), '>=', $position)
-            ->increment($this->positionColumn());        
+            ->increment($this->positionColumn());
     }
 
     /**
@@ -744,7 +756,7 @@ trait Listify
     {
         if($old_position == $new_position) return;
         $avoid_id_condition = $avoid_id ? $this->primaryKey() . " != " . $avoid_id : '1 = 1';
-        
+
         if($old_position < $new_position)
         {
             // Decrement position of intermediate items
@@ -791,7 +803,7 @@ trait Listify
         {
             $this->incrementPositionsOnLowerItems($position);
         }
-        
+
         $this->setListPosition($position);
     }
 

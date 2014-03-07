@@ -73,12 +73,12 @@
 <div class="highlight highlight-js"><pre>  <span class="s2">"require"</span><span class="o">:</span> <span class="p">{</span>
     <span class="s2">"laravel/framework"</span><span class="o">:</span> <span class="s2">"4.x"</span><span class="p">,</span>
     <span class="s2">"lookitsatravis/listify"</span><span class="o">:</span> <span class="s2">"1.0.x"</span>
-  <span class="p">}</span>  
+  <span class="p">}</span>
 </pre></div>
 
 <p>Once this operation completes, the final step is to add the service provider. Open <code>app/config/app.php</code>, and add a new item to the providers array.</p>
 
-<div class="highlight highlight-php"><pre>    <span class="s1">'Lookitsatravis\Listify\ListifyServiceProvider'</span> 
+<div class="highlight highlight-php"><pre>    <span class="s1">'Lookitsatravis\Listify\ListifyServiceProvider'</span>
 </pre></div>
 
 <p>Optionally, you can define an alias to the <code>Listify</code> trait. Open <code>app/config/app.php</code>, and add a new item to the aliases array.</p>
@@ -111,18 +111,11 @@
 
         <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">initListify</span><span class="p">();</span>
     <span class="p">}</span>
-
-    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">boot</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="k">parent</span><span class="o">::</span><span class="na">boot</span><span class="p">();</span>
-
-        <span class="k">static</span><span class="o">::</span><span class="na">bootListify</span><span class="p">();</span>
-    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 
 <blockquote>
-<p>Make sure that the <code>initListify()</code> method is called <em>after</em> <code>parent::__construct()</code> of your model, and that <code>static::bootListify()</code> is called <em>after</em> <code>parent::boot()</code>.</p>
+<p>Make sure that the <code>initListify()</code> method is called <em>after</em> <code>parent::__construct()</code> of your model.</p>
 </blockquote>
 
 <p>That's all it takes to get access to the <code>Listify</code> hotness.</p>
@@ -133,7 +126,7 @@
 <h3>
 <a name="instance-methods-added-to-eloquent-models" class="anchor" href="#instance-methods-added-to-eloquent-models"><span class="octicon octicon-link"></span></a>Instance Methods Added To Eloquent Models</h3>
 
-<p>You'll have a number of methods added to each instance of the Eloquent model to which <code>Listify</code> is added. </p>
+<p>You'll have a number of methods added to each instance of the Eloquent model to which <code>Listify</code> is added.</p>
 
 <p>In <code>Listify</code>, "higher" means further up the list (a lower <code>position</code>), and "lower" means further down the list (a higher <code>position</code>). That can be confusing, so it might make sense to add tests that validate that you're using the right method given your context.</p>
 
@@ -216,13 +209,6 @@
             <span class="s1">'scope'</span> <span class="o">=&gt;</span> <span class="s1">'answer_to_ltuae = 42'</span>
         <span class="p">]);</span>
     <span class="p">}</span>
-
-    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">boot</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="k">parent</span><span class="o">::</span><span class="na">boot</span><span class="p">();</span>
-
-        <span class="k">static</span><span class="o">::</span><span class="na">bootListify</span><span class="p">();</span>
-    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -250,16 +236,9 @@
         <span class="p">]);</span>
     <span class="p">}</span>
 
-    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">boot</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="k">parent</span><span class="o">::</span><span class="na">boot</span><span class="p">();</span>
-
-        <span class="k">static</span><span class="o">::</span><span class="na">bootListify</span><span class="p">();</span>
-    <span class="p">}</span>
-
     <span class="k">public</span> <span class="k">function</span> <span class="nf">toDoList</span><span class="p">()</span>
     <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">belongsTo</span><span class="p">(</span><span class="s1">'ToDoList'</span><span class="p">);</span> 
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">belongsTo</span><span class="p">(</span><span class="s1">'ToDoList'</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -289,19 +268,22 @@
             <span class="s1">'scope'</span> <span class="o">=&gt;</span> <span class="nx">DB</span><span class="o">::</span><span class="na">table</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getTable</span><span class="p">())</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">(</span><span class="s1">'type'</span><span class="p">,</span> <span class="s1">'='</span><span class="p">,</span> <span class="s1">'Not A List of My Favorite Porn Videos'</span><span class="p">)</span>
         <span class="p">]);</span>
     <span class="p">}</span>
-
-    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">boot</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="k">parent</span><span class="o">::</span><span class="na">boot</span><span class="p">();</span>
-
-        <span class="k">static</span><span class="o">::</span><span class="na">bootListify</span><span class="p">();</span>
-    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 
 <p>Results in a scope of:</p>
 
 <p><code>to_do_list_items.type = 'Not A List of My Favorite Porn Videos'</code></p>
+
+<hr><h3>
+<a name="changing-the-configuration" class="anchor" href="#changing-the-configuration"><span class="octicon octicon-link"></span></a>Changing the configuration</h3>
+
+<p>You may also change any configuration value during runtime by using <code>$this-&gt;setListifyConfig('key', 'value');</code>. For example, to change the scope, you can do this:</p>
+
+<div class="highlight highlight-php"><pre><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setListifyConfig</span><span class="p">(</span><span class="s1">'scope'</span><span class="p">,</span> <span class="s1">'what_does_the_fox_say = "ring ding ding ding"'</span><span class="p">);</span>
+</pre></div>
+
+<p>When an update is processed, the original scope will be used to remove the record from that list, and insert it into the new list scope. <em>Be careful here</em>. Changing the configuration during processing can have unpredictable effects.</p>
 
 <h2>
 <a name="notes" class="anchor" href="#notes"><span class="octicon octicon-link"></span></a>Notes</h2>
@@ -310,10 +292,33 @@
 
 <p>The <code>position</code> column is set after validations are called, so you should not put a <code>presence</code> validation on the <code>position</code> column.</p>
 
+<p><code>Listify</code> boots the Eloquent model on it's own in order to set event handlers. If you need to override a model's static <code>boot</code> method, you'll need to make sure to boot <code>Listify</code> as well.</p>
+
+<div class="highlight highlight-php"><pre>
+<span class="k">class</span> <span class="nc">BootExample</span> <span class="k">extends</span> <span class="nx">Eloquent</span>
+<span class="p">{</span>
+    <span class="o">...</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">boot</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">boot</span><span class="p">();</span>
+
+        <span class="k">static</span><span class="o">::</span><span class="na">bootListify</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+
+<blockquote>
+<p>Make sure that <code>static::bootListify()</code> is called <em>after</em> <code>parent::boot()</code>.</p>
+</blockquote>
+
 <h2>
 <a name="future-plans" class="anchor" href="#future-plans"><span class="octicon octicon-link"></span></a>Future Plans</h2>
 
 <ul>
+<li>Add support for using a closure as a scope</li>
 <li>Update <code>Illuminate\Database\Query\Builder</code> scope to be more secure and flexible</li>
 <li>Additional features for the install command. Things like:
 
@@ -340,7 +345,7 @@
 </ul><h2>
 <a name="copyright" class="anchor" href="#copyright"><span class="octicon octicon-link"></span></a>Copyright</h2>
 
-<p>Copyright (c) 2013 Travis Vignon, released under the MIT license</p>
+<p>Copyright (c) 2013-2014 Travis Vignon, released under the MIT license</p>
       </section>
     </div>
 

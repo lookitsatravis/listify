@@ -1,3 +1,14 @@
+## 1.0.5 (August 12, 2014)
+
+Features:
+
+  - None
+
+Bugfixes:
+
+  - Allowing any version of Laravel 4
+  - Removed unnecessary directories
+
 ## 1.0.4 (March 4, 2014)
 
 Features:

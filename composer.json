@@ -16,9 +16,6 @@
         "satooshi/php-coveralls": "dev-master"
     },
     "autoload": {
-        "classmap": [
-            "src/migrations"
-        ],
         "psr-0": {
             "Lookitsatravis\\Listify": "src/"
         }

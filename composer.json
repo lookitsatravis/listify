@@ -10,9 +10,15 @@
     }],
     "require": {
         "php": ">=5.4.0",
-        "laravel/framework": "4.*"
+        "illuminate/database": ">=4.x",
+        "illuminate/events": ">=4.x",
+        "illuminate/container": ">=4.x",
+        "illuminate/view": ">=4.x",
+        "illuminate/support": ">=4.x",
+        "illuminate/filesystem": ">=4.x"
     },
     "require-dev": {
+        "laravel/framework": "4.*",
         "satooshi/php-coveralls": "dev-master"
     },
     "autoload": {

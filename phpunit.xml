@@ -7,12 +7,12 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
-         stopOnFailure="false"
+         stopOnFailure="true"
          syntaxCheck="false"
 >
     <testsuites>
         <testsuite name="Listify Test Suite">
-            <directory suffix=".php" phpVersion="5.4.0" phpVersionOperator=">=">./tests/test_app/app/tests</directory>
+            <directory suffix=".php" phpVersion="5.4.0" phpVersionOperator=">=">./tests</directory>
         </testsuite>
     </testsuites>
 

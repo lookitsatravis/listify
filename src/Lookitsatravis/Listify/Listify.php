@@ -376,7 +376,7 @@ trait Listify
     {
         if(!$this->lowerItem()) return;
 
-        DB::transaction(function()
+        $this->getConnection()->transaction(function()
         {
             $this->lowerItem()->decrement($this->positionColumn());
             $this->increment($this->positionColumn());
@@ -391,7 +391,7 @@ trait Listify
     {
         if(!$this->higherItem()) return;
 
-        DB::transaction(function()
+        $this->getConnection()->transaction(function()
         {
             $this->higherItem()->increment($this->positionColumn());
             $this->decrement($this->positionColumn());
@@ -406,7 +406,7 @@ trait Listify
     {
         if($this->isNotInList()) return NULL;
 
-        DB::transaction(function()
+        $this->getConnection()->transaction(function()
         {
             $this->decrementPositionsOnLowerItems();
             $this->assumeBottomPosition();
@@ -421,7 +421,7 @@ trait Listify
     {
         if($this->isNotInList()) return NULL;
 
-        DB::transaction(function()
+        $this->getConnection()->transaction(function()
         {
             $this->incrementPositionsOnHigherItems();
             $this->assumeTopPosition();

@@ -1,33 +1,58 @@
 <?php
 
-require_once __DIR__ . '/test_app/vendor/autoload.php';
+use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Events\Dispatcher;
 
-function application_autoloader($class) {
-    $class = strtolower($class);
-    $class_filename = strtolower($class).'.php';
-    $class_root = dirname(__FILE__) . "/../src/Lookitsatravis";
+require_once __DIR__ . '/../vendor/autoload.php';
 
-    $directories = new RecursiveDirectoryIterator($class_root);
-    foreach(new RecursiveIteratorIterator($directories) as $file) {
+// Create database connection
+$capsule = new Capsule;
+$capsule->addConnection([
+    'driver' => 'sqlite',
+    'database' => ':memory:',
+]);
+$capsule->setEventDispatcher(new Dispatcher);
+$capsule->setAsGlobal();
+$capsule->bootEloquent();
 
-        if (strtolower("Lookitsatravis\\listify\\".$file->getFilename()) == $class_filename) {
-            $full_path = $file->getRealPath();
-            require_once $full_path;
-            break;
-        }
+// Create DB schema
+$capsule->schema()->dropIfExists('foos');
+$capsule->schema()->dropIfExists('foo_with_string_scopes');
+$capsule->schema()->dropIfExists('foo_with_belongsto_scope_as');
+$capsule->schema()->dropIfExists('foo_with_belongsto_scope_bs');
+$capsule->schema()->dropIfExists('foo_with_query_builder_scopes');
 
-        if (strtolower("Lookitsatravis\\listify\\commands\\".$file->getFilename()) == $class_filename) {
-            $full_path = $file->getRealPath();
-            require_once $full_path;
-            break;
-        }
+$capsule->schema()->create('foos', function($table) {
+    $table->increments('id');
+    $table->string('name');
+    $table->integer('position')->nullable();
+    $table->timestamps();
+});
+$capsule->schema()->create('foo_with_string_scopes', function($table) {
+    $table->increments('id');
+    $table->string('name');
+    $table->integer('position')->nullable();
+    $table->string('company')->default('companyA');
+    $table->timestamps();
+});
+$capsule->schema()->create('foo_with_belongsto_scope_as', function($table) {
+    $table->increments('id');
+    $table->string('name');
+    $table->integer('position')->nullable();
+    $table->integer('foo_with_belongsto_scope_b_id');
+    $table->timestamps();
+});
+$capsule->schema()->create('foo_with_belongsto_scope_bs', function($table) {
+    $table->increments('id');
+    $table->string('name');
+    $table->timestamps();
+});
+$capsule->schema()->create('foo_with_query_builder_scopes', function($table) {
+    $table->increments('id');
+    $table->string('name');
+    $table->integer('position')->nullable();
+    $table->string('company')->default('ACME');
+    $table->integer('alt_id')->nullable();
+    $table->timestamps();
+});
 
-        if (strtolower("Lookitsatravis\\listify\\exceptions\\".$file->getFilename()) == $class_filename) {
-            $full_path = $file->getRealPath();
-            require_once $full_path;
-            break;
-        }
-    }
-}
-
-spl_autoload_register('application_autoloader');

@@ -10,15 +10,22 @@
     }],
     "require": {
         "php": ">=5.4.0",
-        "laravel/framework": "4.*"
+        "illuminate/database": "4.*",
+        "illuminate/support": "4.*",
+        "illuminate/console": "4.*",
+        "illuminate/events": "4.*"
     },
     "require-dev": {
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "dev-master",
+        "way/phpunit-wrappers": "dev-master"
     },
     "autoload": {
         "psr-0": {
             "Lookitsatravis\\Listify": "src/"
         }
+    },
+    "autoload-dev": {
+        "classmap": ["tests/models"]
     },
     "minimum-stability": "stable"
 }

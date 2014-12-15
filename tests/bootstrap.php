@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set('UTC');
+
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Events\Dispatcher;
 
@@ -55,4 +57,3 @@ $capsule->schema()->create('foo_with_query_builder_scopes', function($table) {
     $table->integer('alt_id')->nullable();
     $table->timestamps();
 });
-

@@ -1,3 +1,14 @@
+## 1.0.6 (December 15, 2014)
+
+Features:
+
+  - Can now be used in Laravel 4 or 5
+  - Removed dependency on the full Laravel stack for functional tests (@jwpage)
+
+Bugfixes:
+
+  - None
+
 ## 1.0.5 (August 12, 2014)
 
 Features:

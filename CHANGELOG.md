@@ -1,3 +1,13 @@
+## 1.1.0 (May 7, 2015)
+
+Features:
+
+  - Now that Laravel 5 is released, packages are registered in a different way. Because of this, Listify now only supports Laravel 5.
+
+Bugfixes:
+
+  - None
+
 ## 1.0.6 (December 15, 2014)
 
 Features:

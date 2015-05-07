@@ -64,8 +64,12 @@
 <ul>
 <li>
 <code>Listify</code> currently requires php &gt;= 5.4 (<code>Listify</code> is implemented via the use of traits).</li>
-<li>Laravel 4.0 or higher</li>
+<li>Laravel 5.0 or higher</li>
 </ul>
+
+<blockquote>
+<p>For use with Laravel 4, please use version 1.0.6.</p>
+</blockquote>
 
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
@@ -74,26 +78,26 @@
 
 <p>Install the package using Composer.  Edit your project's <code>composer.json</code> file to require <code>lookitsatravis/listify</code>.</p>
 
-<div class="highlight highlight-js"><pre>  <span class="pl-s1"><span class="pl-pds">"</span>require<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
-    <span class="pl-s1"><span class="pl-pds">"</span>laravel/framework<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">"</span>4.x<span class="pl-pds">"</span></span>,
-    <span class="pl-s1"><span class="pl-pds">"</span>lookitsatravis/listify<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">"</span>1.0.x<span class="pl-pds">"</span></span>
+<div class="highlight highlight-js"><pre>  <span class="pl-s"><span class="pl-pds">"</span>require<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>laravel/framework<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>~5.0<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>lookitsatravis/listify<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>1.1.x<span class="pl-pds">"</span></span>
   }</pre></div>
 
 <p>Once this operation completes, the final step is to add the service provider. Open <code>app/config/app.php</code>, and add a new item to the providers array.</p>
 
-<div class="highlight highlight-php"><pre><span class="pl-s2">    <span class="pl-s1"><span class="pl-pds">'</span>Lookitsatravis\Listify\ListifyServiceProvider<span class="pl-pds">'</span></span></span></pre></div>
+<div class="highlight highlight-php"><pre><span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>Lookitsatravis\Listify\ListifyServiceProvider<span class="pl-pds">'</span></span></span></pre></div>
 
 <p>Optionally, you can define an alias to the <code>Listify</code> trait. Open <code>app/config/app.php</code>, and add a new item to the aliases array.</p>
 
-<div class="highlight highlight-php"><pre><span class="pl-s2">    <span class="pl-s1"><span class="pl-pds">'</span>Listify<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s1"><span class="pl-pds">'</span>Lookitsatravis\Listify\Listify<span class="pl-pds">'</span></span></span></pre></div>
+<div class="highlight highlight-php"><pre><span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>Listify<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>Lookitsatravis\Listify\Listify<span class="pl-pds">'</span></span></span></pre></div>
 
 <h2>
 <a id="quickstart" class="anchor" href="#quickstart" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quickstart</h2>
 
 <p>First things first, you'll need to add a column to store the position. From the command line, use the migration generator:</p>
 
-<div class="highlight highlight-php"><pre><span class="pl-s2"><span class="pl-c1">php</span> <span class="pl-c1">artisan</span> <span class="pl-c1">listify</span>:<span class="pl-c1">attach</span> {<span class="pl-c1">table_name</span>} {<span class="pl-c1">position_column_name</span>}</span>
-<span class="pl-s2"><span class="pl-c1">php</span> <span class="pl-c1">artisan</span> <span class="pl-c1">migrate</span></span></pre></div>
+<div class="highlight highlight-php"><pre><span class="pl-s1"><span class="pl-c1">php</span> <span class="pl-c1">artisan</span> <span class="pl-c1">listify</span>:<span class="pl-c1">attach</span> {<span class="pl-c1">table_name</span>} {<span class="pl-c1">position_column_name</span>}</span>
+<span class="pl-s1"><span class="pl-c1">php</span> <span class="pl-c1">artisan</span> <span class="pl-c1">migrate</span></span></pre></div>
 
 <blockquote>
 <p><code>{table_name}</code> is a required argument. <code>{position_column_name}</code> is optional and the default value is "position".</p>
@@ -101,17 +105,17 @@
 
 <p>Then, in your model:</p>
 
-<div class="highlight highlight-php"><pre><span class="pl-s2"><span class="pl-st">class</span> <span class="pl-en">User</span> <span class="pl-s">extends</span> <span class="pl-e">Eloquent</span></span>
-<span class="pl-s2">{</span>
-<span class="pl-s2">    <span class="pl-k">use</span> <span class="pl-s3">\Lookitsatravis\Listify\Listify</span>;</span>
-<span class="pl-s2"></span>
-<span class="pl-s2">    <span class="pl-s">public</span> <span class="pl-st">function</span> <span class="pl-s3">__construct</span>(<span class="pl-st">array</span> <span class="pl-vo">$attributes</span> <span class="pl-k">=</span> <span class="pl-s3">array</span>(), <span class="pl-vo">$exists</span> <span class="pl-k">=</span> <span class="pl-c1">false</span>) {</span>
-<span class="pl-s2"></span>
-<span class="pl-s2">        <span class="pl-st">parent</span><span class="pl-k">::</span>__construct(<span class="pl-vo">$attributes</span>, <span class="pl-vo">$exists</span>);</span>
-<span class="pl-s2"></span>
-<span class="pl-s2">        <span class="pl-vo">$this</span><span class="pl-k">-&gt;</span>initListify();</span>
-<span class="pl-s2">    }</span>
-<span class="pl-s2">}</span></pre></div>
+<div class="highlight highlight-php"><pre><span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">User</span> <span class="pl-k">extends</span> <span class="pl-e">Eloquent</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-k">use</span> <span class="pl-c1">\Lookitsatravis\Listify\Listify</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-c1">__construct</span>(<span class="pl-k">array</span> <span class="pl-smi">$attributes</span> <span class="pl-k">=</span> <span class="pl-c1">array</span>(), <span class="pl-smi">$exists</span> <span class="pl-k">=</span> <span class="pl-c1">false</span>) {</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-k">parent</span><span class="pl-k">::</span>__construct(<span class="pl-smi">$attributes</span>, <span class="pl-smi">$exists</span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>initListify();</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1">}</span></pre></div>
 
 <blockquote>
 <p>Make sure that the <code>initListify()</code> method is called <em>after</em> <code>parent::__construct()</code> of your model.</p>
@@ -206,19 +210,19 @@
 
 <p>Example:</p>
 
-<div class="highlight highlight-php"><pre><span class="pl-s2"><span class="pl-st">class</span> <span class="pl-en">User</span> <span class="pl-s">extends</span> <span class="pl-e">Eloquent</span></span>
-<span class="pl-s2">{</span>
-<span class="pl-s2">    <span class="pl-k">use</span> <span class="pl-s3">\Lookitsatravis\Listify\Listify</span>;</span>
-<span class="pl-s2"></span>
-<span class="pl-s2">    <span class="pl-s">public</span> <span class="pl-st">function</span> <span class="pl-s3">__construct</span>(<span class="pl-st">array</span> <span class="pl-vo">$attributes</span> <span class="pl-k">=</span> <span class="pl-s3">array</span>(), <span class="pl-vo">$exists</span> <span class="pl-k">=</span> <span class="pl-c1">false</span>) {</span>
-<span class="pl-s2"></span>
-<span class="pl-s2">        <span class="pl-st">parent</span><span class="pl-k">::</span>__construct(<span class="pl-vo">$attributes</span>, <span class="pl-vo">$exists</span>);</span>
-<span class="pl-s2"></span>
-<span class="pl-s2">        <span class="pl-vo">$this</span><span class="pl-k">-&gt;</span>initListify([</span>
-<span class="pl-s2">            <span class="pl-s1"><span class="pl-pds">'</span>scope<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s1"><span class="pl-pds">'</span>answer_to_ltuae = 42<span class="pl-pds">'</span></span></span>
-<span class="pl-s2">        ]);</span>
-<span class="pl-s2">    }</span>
-<span class="pl-s2">}</span></pre></div>
+<div class="highlight highlight-php"><pre><span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">User</span> <span class="pl-k">extends</span> <span class="pl-e">Eloquent</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-k">use</span> <span class="pl-c1">\Lookitsatravis\Listify\Listify</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-c1">__construct</span>(<span class="pl-k">array</span> <span class="pl-smi">$attributes</span> <span class="pl-k">=</span> <span class="pl-c1">array</span>(), <span class="pl-smi">$exists</span> <span class="pl-k">=</span> <span class="pl-c1">false</span>) {</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-k">parent</span><span class="pl-k">::</span>__construct(<span class="pl-smi">$attributes</span>, <span class="pl-smi">$exists</span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>initListify([</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>scope<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>answer_to_ltuae = 42<span class="pl-pds">'</span></span></span>
+<span class="pl-s1">        ]);</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1">}</span></pre></div>
 
 <p>Results in a scope of:</p>
 
@@ -233,24 +237,24 @@
 
 <p>Example:</p>
 
-<div class="highlight highlight-php"><pre><span class="pl-s2"><span class="pl-st">class</span> <span class="pl-en">ToDoListItem</span> <span class="pl-s">extends</span> <span class="pl-e">Eloquent</span></span>
-<span class="pl-s2">{</span>
-<span class="pl-s2">    <span class="pl-k">use</span> <span class="pl-s3">\Lookitsatravis\Listify\Listify</span>;</span>
-<span class="pl-s2"></span>
-<span class="pl-s2">    <span class="pl-s">public</span> <span class="pl-st">function</span> <span class="pl-s3">__construct</span>(<span class="pl-st">array</span> <span class="pl-vo">$attributes</span> <span class="pl-k">=</span> <span class="pl-s3">array</span>(), <span class="pl-vo">$exists</span> <span class="pl-k">=</span> <span class="pl-c1">false</span>) {</span>
-<span class="pl-s2"></span>
-<span class="pl-s2">        <span class="pl-st">parent</span><span class="pl-k">::</span>__construct(<span class="pl-vo">$attributes</span>, <span class="pl-vo">$exists</span>);</span>
-<span class="pl-s2"></span>
-<span class="pl-s2">        <span class="pl-vo">$this</span><span class="pl-k">-&gt;</span>initListify([</span>
-<span class="pl-s2">            <span class="pl-s1"><span class="pl-pds">'</span>scope<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-vo">$this</span><span class="pl-k">-&gt;</span>toDoList()</span>
-<span class="pl-s2">        ]);</span>
-<span class="pl-s2">    }</span>
-<span class="pl-s2"></span>
-<span class="pl-s2">    <span class="pl-s">public</span> <span class="pl-st">function</span> <span class="pl-en">toDoList</span>()</span>
-<span class="pl-s2">    {</span>
-<span class="pl-s2">        <span class="pl-vo">$this</span><span class="pl-k">-&gt;</span>belongsTo(<span class="pl-s1"><span class="pl-pds">'</span>ToDoList<span class="pl-pds">'</span></span>);</span>
-<span class="pl-s2">    }</span>
-<span class="pl-s2">}</span></pre></div>
+<div class="highlight highlight-php"><pre><span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">ToDoListItem</span> <span class="pl-k">extends</span> <span class="pl-e">Eloquent</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-k">use</span> <span class="pl-c1">\Lookitsatravis\Listify\Listify</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-c1">__construct</span>(<span class="pl-k">array</span> <span class="pl-smi">$attributes</span> <span class="pl-k">=</span> <span class="pl-c1">array</span>(), <span class="pl-smi">$exists</span> <span class="pl-k">=</span> <span class="pl-c1">false</span>) {</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-k">parent</span><span class="pl-k">::</span>__construct(<span class="pl-smi">$attributes</span>, <span class="pl-smi">$exists</span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>initListify([</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>scope<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>toDoList()</span>
+<span class="pl-s1">        ]);</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-en">toDoList</span>()</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>belongsTo(<span class="pl-s"><span class="pl-pds">'</span>ToDoList<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1">}</span></pre></div>
 
 <p>Results in a scope of:</p>
 
@@ -267,19 +271,19 @@
 
 <p>Example:</p>
 
-<div class="highlight highlight-php"><pre><span class="pl-s2"><span class="pl-st">class</span> <span class="pl-en">ToDoListItem</span> <span class="pl-s">extends</span> <span class="pl-e">Eloquent</span></span>
-<span class="pl-s2">{</span>
-<span class="pl-s2">    <span class="pl-k">use</span> <span class="pl-s3">\Lookitsatravis\Listify\Listify</span>;</span>
-<span class="pl-s2"></span>
-<span class="pl-s2">    <span class="pl-s">public</span> <span class="pl-st">function</span> <span class="pl-s3">__construct</span>(<span class="pl-st">array</span> <span class="pl-vo">$attributes</span> <span class="pl-k">=</span> <span class="pl-s3">array</span>(), <span class="pl-vo">$exists</span> <span class="pl-k">=</span> <span class="pl-c1">false</span>) {</span>
-<span class="pl-s2"></span>
-<span class="pl-s2">        <span class="pl-st">parent</span><span class="pl-k">::</span>__construct(<span class="pl-vo">$attributes</span>, <span class="pl-vo">$exists</span>);</span>
-<span class="pl-s2"></span>
-<span class="pl-s2">        <span class="pl-vo">$this</span><span class="pl-k">-&gt;</span>initListify([</span>
-<span class="pl-s2">            <span class="pl-s1"><span class="pl-pds">'</span>scope<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s3">DB</span><span class="pl-k">::</span>table(<span class="pl-vo">$this</span><span class="pl-k">-&gt;</span>getTable())<span class="pl-k">-&gt;</span>where(<span class="pl-s1"><span class="pl-pds">'</span>type<span class="pl-pds">'</span></span>, <span class="pl-s1"><span class="pl-pds">'</span>=<span class="pl-pds">'</span></span>, <span class="pl-s1"><span class="pl-pds">'</span>Not A List of My Favorite Porn Videos<span class="pl-pds">'</span></span>)</span>
-<span class="pl-s2">        ]);</span>
-<span class="pl-s2">    }</span>
-<span class="pl-s2">}</span></pre></div>
+<div class="highlight highlight-php"><pre><span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">ToDoListItem</span> <span class="pl-k">extends</span> <span class="pl-e">Eloquent</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-k">use</span> <span class="pl-c1">\Lookitsatravis\Listify\Listify</span>;</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">function</span> <span class="pl-c1">__construct</span>(<span class="pl-k">array</span> <span class="pl-smi">$attributes</span> <span class="pl-k">=</span> <span class="pl-c1">array</span>(), <span class="pl-smi">$exists</span> <span class="pl-k">=</span> <span class="pl-c1">false</span>) {</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-k">parent</span><span class="pl-k">::</span>__construct(<span class="pl-smi">$attributes</span>, <span class="pl-smi">$exists</span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>initListify([</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>scope<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">DB</span><span class="pl-k">::</span>table(<span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>getTable())<span class="pl-k">-&gt;</span>where(<span class="pl-s"><span class="pl-pds">'</span>type<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>=<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>Not A List of My Favorite Porn Videos<span class="pl-pds">'</span></span>)</span>
+<span class="pl-s1">        ]);</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1">}</span></pre></div>
 
 <p>Results in a scope of:</p>
 
@@ -292,7 +296,7 @@
 
 <p>You may also change any configuration value during runtime by using <code>$this-&gt;setListifyConfig('key', 'value');</code>. For example, to change the scope, you can do this:</p>
 
-<div class="highlight highlight-php"><pre><span class="pl-s2"><span class="pl-vo">$this</span><span class="pl-k">-&gt;</span>setListifyConfig(<span class="pl-s1"><span class="pl-pds">'</span>scope<span class="pl-pds">'</span></span>, <span class="pl-s1"><span class="pl-pds">'</span>what_does_the_fox_say = "ring ding ding ding"<span class="pl-pds">'</span></span>);</span></pre></div>
+<div class="highlight highlight-php"><pre><span class="pl-s1"><span class="pl-smi">$this</span><span class="pl-k">-&gt;</span>setListifyConfig(<span class="pl-s"><span class="pl-pds">'</span>scope<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>what_does_the_fox_say = "ring ding ding ding"<span class="pl-pds">'</span></span>);</span></pre></div>
 
 <p>When an update is processed, the original scope will be used to remove the record from that list, and insert it into the new list scope. <em>Be careful here</em>. Changing the configuration during processing can have unpredictable effects.</p>
 
@@ -305,20 +309,20 @@
 
 <p><code>Listify</code> boots the Eloquent model on it's own in order to set event handlers. If you need to override a model's static <code>boot</code> method, you'll need to make sure to boot <code>Listify</code> as well.</p>
 
-<div class="highlight highlight-php"><pre><span class="pl-s2"></span>
-<span class="pl-s2"><span class="pl-st">class</span> <span class="pl-en">BootExample</span> <span class="pl-s">extends</span> <span class="pl-e">Eloquent</span></span>
-<span class="pl-s2">{</span>
-<span class="pl-s2">    <span class="pl-k">...</span></span>
-<span class="pl-s2"></span>
-<span class="pl-s2">    <span class="pl-s">public</span> <span class="pl-s">static</span> <span class="pl-st">function</span> <span class="pl-en">boot</span>()</span>
-<span class="pl-s2">    {</span>
-<span class="pl-s2">        <span class="pl-st">parent</span><span class="pl-k">::</span>boot();</span>
-<span class="pl-s2"></span>
-<span class="pl-s2">        <span class="pl-st">static</span><span class="pl-k">::</span>bootListify();</span>
-<span class="pl-s2">    }</span>
-<span class="pl-s2"></span>
-<span class="pl-s2">    <span class="pl-k">...</span></span>
-<span class="pl-s2">}</span></pre></div>
+<div class="highlight highlight-php"><pre><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">BootExample</span> <span class="pl-k">extends</span> <span class="pl-e">Eloquent</span></span>
+<span class="pl-s1">{</span>
+<span class="pl-s1">    <span class="pl-k">...</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">function</span> <span class="pl-en">boot</span>()</span>
+<span class="pl-s1">    {</span>
+<span class="pl-s1">        <span class="pl-k">parent</span><span class="pl-k">::</span>boot();</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">        <span class="pl-k">static</span><span class="pl-k">::</span>bootListify();</span>
+<span class="pl-s1">    }</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">    <span class="pl-k">...</span></span>
+<span class="pl-s1">}</span></pre></div>
 
 <blockquote>
 <p>Make sure that <code>static::bootListify()</code> is called <em>after</em> <code>parent::boot()</code>.</p>
@@ -353,7 +357,7 @@
 <li>Commit and push until you are happy with your contribution</li>
 <li>Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.</li>
 <li>Please try not to mess with the Composer.json, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.</li>
-<li>I would recommend using Laravel 4.0.x and higher for testing the build before a pull request.</li>
+<li>I would recommend using Laravel 5.0 and higher for testing the build before a pull request.</li>
 </ul>
 
 <h2>
@@ -367,7 +371,7 @@
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">Listify maintained by <a href="https://github.com/lookitsatravis">lookitsatravis</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
 

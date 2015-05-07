@@ -35,8 +35,8 @@ Install the package using Composer.  Edit your project's `composer.json` file to
 
 ```js
   "require": {
-    "laravel/framework": "4.x",
-    "lookitsatravis/listify": "1.0.x"
+    "laravel/framework": "~5.0",
+    "lookitsatravis/listify": "1.1.x"
   }
 ```
 

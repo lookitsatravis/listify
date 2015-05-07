@@ -18,7 +18,8 @@ class ListifyServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
-        $this->package('lookitsatravis/listify');
+        $viewPath = __DIR__.'/../../views';
+        $this->loadViewsFrom($viewPath, 'listify');
     }
 
     /**
@@ -28,9 +29,20 @@ class ListifyServiceProvider extends ServiceProvider {
      */
     public function register()
     {   
-        $this->registerListifyAttach();
+        $this->registerConsoleCommands();
+    }
 
-        $this->commands('listify.attach');
+    /**
+     * Register the package console commands.
+     *
+     * @return void
+     */
+    protected function registerConsoleCommands()
+    {
+        $this->registerListifyAttach();
+        $this->commands([
+            'listify.attach'
+        ]);
     }
 
     /**
@@ -40,7 +52,7 @@ class ListifyServiceProvider extends ServiceProvider {
      */
     protected function registerListifyAttach()
     {
-        $this->app->bind('listify.attach', function($app)
+        $this->app->bindShared('listify.attach', function($app)
         {
             return new Commands\AttachCommand;
         });

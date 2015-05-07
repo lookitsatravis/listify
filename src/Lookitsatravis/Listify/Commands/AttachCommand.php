@@ -95,7 +95,7 @@ class AttachCommand extends Command {
         ];
 
         $prefix = date('Y_m_d_His');
-        $path = app_path() . '/database/migrations';
+        $path = base_path() . '/database/migrations';
 
         if (!is_dir($path)) mkdir($path);
 
@@ -107,7 +107,6 @@ class AttachCommand extends Command {
         File::put($fileName, $migration);
 
         // Dump the autoloader and print a created migration message to the console.
-        $this->call('dump-autoload');
         $this->info("Created migration: $fileName");
     }
 

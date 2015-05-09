@@ -307,27 +307,6 @@
 
 <p>The <code>position</code> column is set after validations are called, so you should not put a <code>presence</code> validation on the <code>position</code> column.</p>
 
-<p><code>Listify</code> boots the Eloquent model on it's own in order to set event handlers. If you need to override a model's static <code>boot</code> method, you'll need to make sure to boot <code>Listify</code> as well.</p>
-
-<div class="highlight highlight-php"><pre><span class="pl-s1"></span>
-<span class="pl-s1"><span class="pl-k">class</span> <span class="pl-en">BootExample</span> <span class="pl-k">extends</span> <span class="pl-e">Eloquent</span></span>
-<span class="pl-s1">{</span>
-<span class="pl-s1">    <span class="pl-k">...</span></span>
-<span class="pl-s1"></span>
-<span class="pl-s1">    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">function</span> <span class="pl-en">boot</span>()</span>
-<span class="pl-s1">    {</span>
-<span class="pl-s1">        <span class="pl-k">parent</span><span class="pl-k">::</span>boot();</span>
-<span class="pl-s1"></span>
-<span class="pl-s1">        <span class="pl-k">static</span><span class="pl-k">::</span>bootListify();</span>
-<span class="pl-s1">    }</span>
-<span class="pl-s1"></span>
-<span class="pl-s1">    <span class="pl-k">...</span></span>
-<span class="pl-s1">}</span></pre></div>
-
-<blockquote>
-<p>Make sure that <code>static::bootListify()</code> is called <em>after</em> <code>parent::boot()</code>.</p>
-</blockquote>
-
 <h2>
 <a id="future-plans" class="anchor" href="#future-plans" aria-hidden="true"><span class="octicon octicon-link"></span></a>Future Plans</h2>
 
@@ -337,7 +316,7 @@
 <li>Additional features for the install command. Things like:
 
 <ul>
-<li>update the model with trait automatically (including init method in constructor and boot method for events)</li>
+<li>update the model with trait automatically (including init method in constructor)</li>
 <li>generate (or add to) a controller with actions for each public method for <code>Listify</code>, including adding necessary routes. This would make it easy to, say, call something like <code>http://localhost:8000/foos/1/move_lower</code> through an AJAX-y front end.</li>
 </ul>
 </li>

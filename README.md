@@ -239,33 +239,12 @@ All `position` queries (select, update, etc.) inside trait methods are executed 
 
 The `position` column is set after validations are called, so you should not put a `presence` validation on the `position` column.
 
-`Listify` boots the Eloquent model on it's own in order to set event handlers. If you need to override a model's static `boot` method, you'll need to make sure to boot `Listify` as well.
-
-```php
-
-class BootExample extends Eloquent
-{
-    ...
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::bootListify();
-    }
-
-    ...
-}
-```
-
-> Make sure that `static::bootListify()` is called *after* `parent::boot()`.
-
 ## Future Plans
 
 - Add support for using a closure as a scope
 - Update `Illuminate\Database\Query\Builder` scope to be more secure and flexible
 - Additional features for the install command. Things like:
-    - update the model with trait automatically (including init method in constructor and boot method for events)
+    - update the model with trait automatically (including init method in constructor)
     - generate (or add to) a controller with actions for each public method for `Listify`, including adding necessary routes. This would make it easy to, say, call something like `http://localhost:8000/foos/1/move_lower` through an AJAX-y front end.
 
 Aside from that, I hope to just keep in parity with the Ruby gem `acts_as_list` (https://github.com/swanandp/acts_as_list) as necessary.

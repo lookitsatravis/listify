@@ -1,3 +1,13 @@
+## 1.1.1 (May 9, 2015)
+
+Features:
+
+  - None
+
+Bugfixes:
+
+  - The model's boot method was getting called twice because of Laravel 5's new automatic trait booting.
+
 ## 1.1.0 (May 7, 2015)
 
 Features:

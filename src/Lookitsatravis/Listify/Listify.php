@@ -81,18 +81,6 @@ trait Listify
     }
 
     /**
-     * The "booting" method of the model.
-     *
-     * @return void
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        static::bootListify();
-    }
-
-    /**
      * Returns whether the scope has changed during the course of interaction with the model
      * @return boolean
      */

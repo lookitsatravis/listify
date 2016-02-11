@@ -1,3 +1,15 @@
+## 1.2.0 (February 11, 2016)
+
+Support for PHP 5.4 has been dropped, and 5.5 will be dropped at EOL.
+
+Features:
+
+  - Added support for prefixed tables (@trungtnm)
+
+Bugfixes:
+
+  - Fixed deprecation in Laravel 5.2 command mounting (@czim)
+
 ## 1.1.1 (May 9, 2015)
 
 Features:

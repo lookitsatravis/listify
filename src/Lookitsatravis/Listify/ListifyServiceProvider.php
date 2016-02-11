@@ -52,7 +52,7 @@ class ListifyServiceProvider extends ServiceProvider {
      */
     protected function registerListifyAttach()
     {
-        $this->app->bindShared('listify.attach', function($app)
+        $this->app->singleton('listify.attach', function($app)
         {
             return new Commands\AttachCommand;
         });

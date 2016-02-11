@@ -662,7 +662,7 @@ trait Listify
      */
     private function primaryKey()
     {
-        return $this->getQualifiedKeyName();
+        return $this->getConnection()->getTablePrefix() . $this->getQualifiedKeyName();
     }
 
     /**

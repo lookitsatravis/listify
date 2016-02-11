@@ -23,7 +23,7 @@ Turn any Eloquent model into a list!
 
 
 ## Requirements
-* `Listify` currently requires php >= 5.4 (`Listify` is implemented via the use of traits).
+* `Listify` currently requires php >= 5.5 (`Listify` is implemented via the use of traits).
 * Laravel 5.0 or higher
 
 > For use with Laravel 4, please use version 1.0.6.
@@ -36,7 +36,7 @@ Install the package using Composer.  Edit your project's `composer.json` file to
 ```js
   "require": {
     "laravel/framework": "~5.0",
-    "lookitsatravis/listify": "1.1.x"
+    "lookitsatravis/listify": "~1.2"
   }
 ```
 
@@ -262,4 +262,4 @@ Aside from that, I hope to just keep in parity with the Ruby gem `acts_as_list` 
 
 ## Copyright
 
-Copyright (c) 2013-2014 Travis Vignon, released under the MIT license
+Copyright (c) 2013-2016 Travis Vignon, released under the MIT license

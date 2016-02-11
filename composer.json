@@ -16,7 +16,7 @@
         "illuminate/events": "~5.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~5.0",
+        "phpunit/phpunit": "~4.0",
         "satooshi/php-coveralls": "dev-master",
         "way/phpunit-wrappers": "dev-master"
     },

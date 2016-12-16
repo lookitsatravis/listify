@@ -1,3 +1,13 @@
+## 1.2.1 (December 16, 2016)
+
+Features:
+
+  - None
+
+Bugfixes:
+
+  - Fixed double-quote issue with biding Query Builder scopes which was affecting Postgres. (@stevendesu)
+
 ## 1.2.0 (February 11, 2016)
 
 Support for PHP 5.4 has been dropped, and 5.5 will be dropped at EOL.

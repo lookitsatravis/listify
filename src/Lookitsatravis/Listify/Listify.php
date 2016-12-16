@@ -250,7 +250,7 @@ trait Listify
                 switch(gettype($bindings[$i]))
                 {
                     case "string":
-                        $theQuery .= '"' . $bindings[$i] . '"';
+                        $theQuery .= '\'' . $bindings[$i] . '\'';
                         break;
                 }
             }

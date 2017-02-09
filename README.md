@@ -262,4 +262,4 @@ Aside from that, I hope to just keep in parity with the Ruby gem `acts_as_list` 
 
 ## Copyright
 
-Copyright (c) 2013-2016 Travis Vignon, released under the MIT license
+Copyright (c) 2013-2017 Travis Vignon, released under the MIT license

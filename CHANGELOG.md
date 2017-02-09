@@ -1,3 +1,13 @@
+## 1.2.2 (Febrary 9, 2017)
+
+Features:
+
+  - None
+
+Bugfixes:
+
+  - Fixed issue where items already in a list were not able to be added to the bottom of a new scope's list (@jordanlev)
+
 ## 1.2.1 (December 16, 2016)
 
 Features:

@@ -14,7 +14,7 @@ use Lookitsatravis\Listify\Exceptions\InvalidQueryBuilderException;
  * Ported from https://github.com/swanandp/acts_as_list
  *
  * @package lookitsatravis/listify
- * @version 1.2.1
+ * @version 1.2.2
  * @author Travis Vignon <travis@lookitsatravis.com>
  * @link
  */

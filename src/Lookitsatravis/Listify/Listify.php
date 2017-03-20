@@ -612,10 +612,7 @@ trait Listify
      */
     private function addToListBottom()
     {
-        if($this->isNotInList())
-        {
-            $this->setListifyPosition($this->bottomPositionInList() + 1);
-        }
+        $this->setListifyPosition($this->bottomPositionInList() + 1);
     }
 
     /**

@@ -71,7 +71,7 @@ trait Listify
 
     /**
      * Required to override options and kick off the Listify's automatic list management.
-     * @param  array $options [column=>string, scope=>string|BelongsTo|Builder, top_of_list=>int, add_new_at=>string]
+     * @param  array $options [column=>string, scope=>string|BelongsTo|Builder|Closure, top_of_list=>int, add_new_at=>string]
      * @return void
      */
     public function initListify($options = [])
@@ -174,6 +174,11 @@ trait Listify
 
         if($theScope !== $this->defaultScope)
         {
+            if(is_callable($theScope))
+            {
+                $theScope = $theScope($this);
+            }
+            
             if(is_string($theScope))
             {
                 //Good for you for being brave. Let's hope it'll run in your DB! You sanitized it, right?
@@ -310,7 +315,7 @@ trait Listify
 
     /**
      * Get the value of the 'scope' option
-     * @return mixed Can be a string, an Eloquent BelongsTo, or an Eloquent Builder
+     * @return mixed Can be a string, an Eloquent BelongsTo, an Eloquent Builder, or an anonymous function that returns one of those 3.
      */
     public function scopeName()
     {

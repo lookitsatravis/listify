@@ -2,12 +2,10 @@
 
 namespace Lookitsatravis\Listify;
 
-use Illuminate\Support\Facades\Event;
-use Lookitsatravis\Listify\Config;
-use Lookitsatravis\Listify\Exceptions\InvalidQueryBuilderException;
+use Lookitsatravis\Listify\Exceptions\NullScopeException;
 use Lookitsatravis\Listify\Exceptions\InvalidScopeException;
 use Lookitsatravis\Listify\Exceptions\NullForeignKeyException;
-use Lookitsatravis\Listify\Exceptions\NullScopeException;
+use Lookitsatravis\Listify\Exceptions\InvalidQueryBuilderException;
 
 /**
  * Gives some nice sorting features to a model.
@@ -177,7 +175,7 @@ trait Listify
     }
 
     /**
-     * Sets the value of the model's position
+     * Sets the value of the model's position.
      *
      * @param int $position
      *
@@ -468,6 +466,7 @@ trait Listify
     public function setListPosition($position = null)
     {
         $this->setListifyPosition($position);
+
         return $this->save();
     }
 
@@ -529,7 +528,6 @@ trait Listify
         } else {
             return $this->listifyTopPositionInList() - 1;
         }
-
     }
 
     /**
@@ -782,6 +780,7 @@ trait Listify
         if (is_string($theScope)) {
             if (! $this->stringScopeValue) {
                 $this->stringScopeValue = $theScope;
+
                 return false;
             }
 
@@ -796,9 +795,10 @@ trait Listify
             if ($originalVal != $currentVal) {
                 return true;
             }
-        } else if ($reflector->getName() == 'Illuminate\Database\Query\Builder') {
+        } elseif ($reflector->getName() == 'Illuminate\Database\Query\Builder') {
             if (! $this->stringScopeValue) {
                 $this->stringScopeValue = $this->getConditionStringFromQueryBuilder($theScope);
+
                 return false;
             }
 
@@ -806,7 +806,6 @@ trait Listify
             if ($theQuery != $this->stringScopeValue) {
                 return true;
             }
-
         }
 
         return false;
@@ -840,7 +839,7 @@ trait Listify
                         } else {
                             $theScope = $theScope->getForeignKey().' = '.$this->getAttribute($theScope->getForeignKey());
                         }
-                    } else if ($reflector->getName() == 'Illuminate\Database\Query\Builder') {
+                    } elseif ($reflector->getName() == 'Illuminate\Database\Query\Builder') {
                         $this->stringScopeValue = $theScope = $this->getConditionStringFromQueryBuilder($theScope);
                     } else {
                         throw new InvalidScopeException('Listify scope parameter must be a String, an Eloquent BelongsTo object, or a Query Builder object.');

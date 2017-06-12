@@ -21,7 +21,8 @@ class Config
 
     protected $config = [];
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->config = $this->buildDefaultConfig();
     }
 
@@ -86,6 +87,7 @@ class Config
     protected function get($key)
     {
         $this->assertKeyIsValid($key);
+
         return $this->config[$key];
     }
 
@@ -93,6 +95,7 @@ class Config
     {
         $this->assertKeyIsValid($key);
         $this->config[$key] = $value;
+
         return $this;
     }
 

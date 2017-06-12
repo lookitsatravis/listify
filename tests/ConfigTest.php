@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-use Lookitsatravis\Listify\Config;
 use PHPUnit\Framework\TestCase;
+use Lookitsatravis\Listify\Config;
 
 class ConfigTest extends TestCase
 {

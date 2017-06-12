@@ -84,15 +84,13 @@ class ListifyModelWithBelongstoScopeTest extends ListifyBaseTest
         $this->reloadBFoos();
 
         $position = 1;
-        foreach ($this->foos as $foo)
-        {
+        foreach ($this->foos as $foo) {
             $this->assertEquals($this->foreignKeyId, $foo->foo_with_belongsto_scope_b_id);
             $position++;
         }
 
         $position = 1;
-        foreach ($this->bfoos as $bfoo)
-        {
+        foreach ($this->bfoos as $bfoo) {
             $this->assertEquals($position, $bfoo->getListifyPosition());
             $position++;
         }

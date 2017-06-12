@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
+use PHPUnit\Framework\TestCase;
 use Lookitsatravis\Listify\Config;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use PHPUnit\Framework\TestCase;
 
 class ListifyBaseTest extends TestCase
 {
@@ -79,7 +79,7 @@ class ListifyBaseTest extends TestCase
 
         $position = 3;
         foreach ($this->foos as $foo) {
-            if($foo->name == $this->model.'1') {
+            if ($foo->name == $this->model.'1') {
                 $this->assertEquals(2, $foo->getListifyPosition());
             } elseif ($foo->name == $this->model.'2') {
                 $this->assertEquals(1, $foo->getListifyPosition());
@@ -100,7 +100,7 @@ class ListifyBaseTest extends TestCase
 
         $position = 3;
         foreach ($this->foos as $foo) {
-            if($foo->name == $this->model.'1') {
+            if ($foo->name == $this->model.'1') {
                 $this->assertEquals(2, $foo->getListifyPosition());
             } elseif ($foo->name == $this->model.'2') {
                 $this->assertEquals(1, $foo->getListifyPosition());
@@ -167,7 +167,7 @@ class ListifyBaseTest extends TestCase
         //Check that the other items have moved down
         $position = 3;
         foreach ($this->foos as $foo) {
-            if($foo->name == $this->model.'1') {
+            if ($foo->name == $this->model.'1') {
                 $this->assertEquals(1, $foo->getListifyPosition());
             } else {
                 $this->assertEquals($position, $foo->getListifyPosition());
@@ -206,7 +206,7 @@ class ListifyBaseTest extends TestCase
                 $this->assertEquals($position, $foo->getListifyPosition());
                 $position++;
 
-                if($position == 11) {
+                if ($position == 11) {
                     break;
                 }
             }
@@ -223,7 +223,7 @@ class ListifyBaseTest extends TestCase
 
         $position = 3;
         foreach ($this->foos as $foo) {
-            if($foo->name == $this->model.'1') {
+            if ($foo->name == $this->model.'1') {
                 $this->assertEquals(2, $foo->getListifyPosition());
             } elseif ($foo->name == $this->model.'2') {
                 $this->assertEquals(1, $foo->getListifyPosition());
@@ -244,7 +244,7 @@ class ListifyBaseTest extends TestCase
 
         $position = 3;
         foreach ($this->foos as $foo) {
-            if($foo->name == $this->model.'1') {
+            if ($foo->name == $this->model.'1') {
                 $this->assertEquals(2, $foo->getListifyPosition());
             } elseif ($foo->name == $this->model.'2') {
                 $this->assertEquals(1, $foo->getListifyPosition());
@@ -284,7 +284,7 @@ class ListifyBaseTest extends TestCase
 
         $position = 2;
         foreach ($this->foos as $foo) {
-            if($foo->name == $this->model.'10') {
+            if ($foo->name == $this->model.'10') {
                 $this->assertEquals(1, $foo->getListifyPosition());
             } else {
                 $this->assertEquals($position, $foo->getListifyPosition());
@@ -303,7 +303,7 @@ class ListifyBaseTest extends TestCase
 
         $position = 1;
         foreach ($this->foos as $foo) {
-            if($foo->id == 1) {
+            if ($foo->id == 1) {
                 $this->assertEquals(null, $foo->getListifyPosition());
             } else {
                 $this->assertEquals($position, $foo->getListifyPosition());
@@ -322,7 +322,7 @@ class ListifyBaseTest extends TestCase
 
         $position = 2;
         foreach ($this->foos as $foo) {
-            if($foo->name == $this->model.'1') {
+            if ($foo->name == $this->model.'1') {
                 $this->assertEquals(2, $foo->getListifyPosition());
             } else {
                 $this->assertEquals($position, $foo->getListifyPosition());
@@ -341,7 +341,7 @@ class ListifyBaseTest extends TestCase
 
         $position = 3;
         foreach ($this->foos as $foo) {
-            if($foo->name == $this->model.'1' || $foo->name == $this->model.'2') {
+            if ($foo->name == $this->model.'1' || $foo->name == $this->model.'2') {
                 $this->assertEquals(1, $foo->getListifyPosition());
             } else {
                 $this->assertEquals($position, $foo->getListifyPosition());
@@ -506,7 +506,6 @@ class ListifyBaseTest extends TestCase
 
     protected function childAssertion()
     {
-
     }
 
     protected function reloadDatabase()

@@ -27,7 +27,7 @@ class ConfigTest extends TestCase
      */
     public function test_invalidPositionThrowsWhenSettingTopPosition()
     {
-        $this->config->setTopPositionInList("foo");
+        $this->config->setTopPositionInList('foo');
     }
 
     public function test_gettingAndSettingPositionColumnName()
@@ -56,7 +56,7 @@ class ConfigTest extends TestCase
      */
     public function test_invalidPositionThrowsWhenSettingAddNewItemTo()
     {
-        $this->config->setAddNewItemTo("something");
+        $this->config->setAddNewItemTo('something');
     }
 
     /**
@@ -65,9 +65,9 @@ class ConfigTest extends TestCase
     public function test_assertKeyIsValid()
     {
         // Grab ahold of the method and change its accessibility.
-      $method = new \ReflectionMethod('\Lookitsatravis\Listify\Config', 'assertKeyIsValid');
-      $method->setAccessible(true);
+        $method = new \ReflectionMethod('\Lookitsatravis\Listify\Config', 'assertKeyIsValid');
+        $method->setAccessible(true);
 
-      $method->invoke($this->config, 'foo');
+        $method->invoke($this->config, 'foo');
     }
 }

@@ -17,8 +17,7 @@ class ListifyModelWithQueryBuilderScopeTest extends ListifyBaseTest
         $modelB = $this->modelB;
         $modelB::boot();
 
-        for ($i = 1; $i <= 10; $i++)
-        {
+        for ($i = 1; $i <= 10; $i++) {
             $foo = new $this->modelB;
             $foo->name = $this->modelB.$i;
             $foo->company = 'NOT_ACME';
@@ -42,7 +41,7 @@ class ListifyModelWithQueryBuilderScopeTest extends ListifyBaseTest
     public function test_passScopeInWithMissingWhere()
     {
         $foo = new $this->model;
-        $foo->name = $this->model."New";
+        $foo->name = $this->model.'New';
         $foo->getListifyConfig()->setScope(Capsule::table('foos')->orderBy('id ASC'));
         $foo->save();
     }
@@ -77,8 +76,7 @@ class ListifyModelWithQueryBuilderScopeTest extends ListifyBaseTest
         $this->reloadBFoos();
 
         $position = 1;
-        foreach ($this->bfoos as $bfoo)
-        {
+        foreach ($this->bfoos as $bfoo) {
             $this->assertEquals($position, $bfoo->getListifyPosition());
             $position++;
         }

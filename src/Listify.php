@@ -1,4 +1,6 @@
-<?php namespace Lookitsatravis\Listify;
+<?php
+
+namespace Lookitsatravis\Listify;
 
 use Illuminate\Support\Facades\Event;
 use Lookitsatravis\Listify\Config;
@@ -58,27 +60,27 @@ trait Listify
     {
         //Bind to model events
         static::deleting(function ($model) {
-            /** @var Listify $model */
+            /* @var Listify $model */
             $model->reloadPosition();
         });
 
         static::deleted(function ($model) {
-            /** @var Listify $model */
+            /* @var Listify $model */
             $model->decrementPositionsOnLowerItems();
         });
 
         static::updating(function ($model) {
-            /** @var Listify $model */
+            /* @var Listify $model */
             $model->checkScope();
         });
 
         static::updated(function ($model) {
-            /** @var Listify $model */
+            /* @var Listify $model */
             $model->updatePositions();
         });
 
         static::creating(function ($model) {
-            /** @var Listify $model */
+            /* @var Listify $model */
             if ($model->addNewAt()) {
                 $methodName = 'addToList'.$model->addNewAt();
                 $model->$methodName();
@@ -91,7 +93,8 @@ trait Listify
      *
      * @return \Lookitsatravis\Listify\Config
      */
-    public function getListifyConfig() {
+    public function getListifyConfig()
+    {
         if ($this->listifyConfig === null) {
             $this->listifyConfig = new Config;
         }
@@ -210,7 +213,7 @@ trait Listify
      */
     public function moveLower()
     {
-        if (!$this->lowerItem()) {
+        if (! $this->lowerItem()) {
             return $this;
         }
 
@@ -229,7 +232,7 @@ trait Listify
      */
     public function moveHigher()
     {
-        if (!$this->higherItem()) {
+        if (! $this->higherItem()) {
             return $this;
         }
 
@@ -366,7 +369,7 @@ trait Listify
     public function higherItem()
     {
         if ($this->isNotInList()) {
-            return null;
+            return;
         }
 
         return $this->listifyList()
@@ -392,7 +395,7 @@ trait Listify
 
         return $this->listifyList()
             ->where($this->getPositionColumnName(), '<', $positionValue)
-            ->where($this->getPositionColumnName(), ">=", $positionValue - $limit)
+            ->where($this->getPositionColumnName(), '>=', $positionValue - $limit)
             ->orderBy($this->getTable().'.'.$this->getPositionColumnName(), 'ASC')
             ->take($limit)
             ->get();
@@ -406,7 +409,7 @@ trait Listify
     public function lowerItem()
     {
         if ($this->isNotInList()) {
-            return null;
+            return;
         }
 
         return $this->listifyList()
@@ -452,7 +455,7 @@ trait Listify
      */
     public function isNotInList()
     {
-        return !$this->isInList();
+        return ! $this->isInList();
     }
 
     /**
@@ -777,7 +780,7 @@ trait Listify
         $theScope = $this->scopeName();
 
         if (is_string($theScope)) {
-            if (!$this->stringScopeValue) {
+            if (! $this->stringScopeValue) {
                 $this->stringScopeValue = $theScope;
                 return false;
             }
@@ -788,13 +791,13 @@ trait Listify
         $reflector = new \ReflectionClass($theScope);
         if ($reflector->getName() == 'Illuminate\Database\Eloquent\Relations\BelongsTo') {
             $originalVal = $this->getOriginal()[$theScope->getForeignKey()];
-            $currentVal  = $this->getAttribute($theScope->getForeignKey());
+            $currentVal = $this->getAttribute($theScope->getForeignKey());
 
             if ($originalVal != $currentVal) {
                 return true;
             }
-        } elseif ($reflector->getName() == 'Illuminate\Database\Query\Builder') {
-            if (!$this->stringScopeValue) {
+        } else if ($reflector->getName() == 'Illuminate\Database\Query\Builder') {
+            if (! $this->stringScopeValue) {
                 $this->stringScopeValue = $this->getConditionStringFromQueryBuilder($theScope);
                 return false;
             }

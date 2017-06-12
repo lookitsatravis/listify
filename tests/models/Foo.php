@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
 use Lookitsatravis\Listify\Listify;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class Foo extends Eloquent
 {

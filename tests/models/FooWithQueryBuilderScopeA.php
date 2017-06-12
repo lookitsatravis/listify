@@ -1,8 +1,8 @@
 <?php
 
+use Lookitsatravis\Listify\Listify;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Eloquent\Model as Eloquent;
-use Lookitsatravis\Listify\Listify;
 
 class FooWithQueryBuilderScopeA extends Eloquent
 {

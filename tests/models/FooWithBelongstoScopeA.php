@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
 use Lookitsatravis\Listify\Listify;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class FooWithBelongstoScopeA extends Eloquent
 {
@@ -21,7 +21,7 @@ class FooWithBelongstoScopeA extends Eloquent
      */
     public $rules = [
         'name' => 'required',
-        'foo_with_belongsto_scope_b_id' => 'required'
+        'foo_with_belongsto_scope_b_id' => 'required',
     ];
 
     /**

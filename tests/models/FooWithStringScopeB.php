@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
 use Lookitsatravis\Listify\Listify;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class FooWithStringScopeB extends Eloquent
 {
@@ -23,7 +23,7 @@ class FooWithStringScopeB extends Eloquent
      */
     public $rules = [
         'name' => 'required',
-        'company' => 'required'
+        'company' => 'required',
     ];
 
     /**

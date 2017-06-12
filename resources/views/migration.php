@@ -1,10 +1,10 @@
-<?= '<?php' . PHP_EOL ?>
+<?= '<?php'.PHP_EOL ?>
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class <?= $className ?> extends Migration {
-
+class <?= $className ?> extends Migration
+{
     /**
      * Make changes to the table.
      *
@@ -12,12 +12,9 @@ class <?= $className ?> extends Migration {
      */
     public function up()
     {
-        Schema::table('<?= $tableName ?>', function(Blueprint $table) {
-
-            $table->integer("<?= $columnName ?>")->nullable();
-
+        Schema::table('<?= $tableName ?>', function (Blueprint $table) {
+            $table->integer('<?= $columnName ?>')->nullable();
         });
-
     }
 
     /**
@@ -27,11 +24,8 @@ class <?= $className ?> extends Migration {
      */
     public function down()
     {
-        Schema::table('<?= $tableName ?>', function(Blueprint $table) {
-
-            $table->dropColumn("<?= $columnName ?>");
-
+        Schema::table('<?= $tableName ?>', function (Blueprint $table) {
+            $table->dropColumn('<?= $columnName ?>');
         });
     }
-
 }

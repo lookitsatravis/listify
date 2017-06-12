@@ -16,17 +16,23 @@
         "illuminate/events": "~5.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.0",
-        "satooshi/php-coveralls": "dev-master",
-        "way/phpunit-wrappers": "dev-master"
+        "phpunit/phpunit": "^6.2",
+        "satooshi/php-coveralls": "dev-master"
     },
     "autoload": {
-        "psr-0": {
-            "Lookitsatravis\\Listify": "src/"
+        "psr-4": {
+            "Lookitsatravis\\Listify\\": "src/"
         }
     },
     "autoload-dev": {
         "classmap": ["tests/models"]
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Lookitsatravis\\Listify\\ListifyServiceProvider"
+            ]
+        }
+    }
 }

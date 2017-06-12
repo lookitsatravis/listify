@@ -1,12 +1,17 @@
-<?php namespace Lookitsatravis\Listify\Commands;
+<?php
+
+namespace Lookitsatravis\Listify\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use DB, View, File, Schema;
 
-class AttachCommand extends Command {
-
+class AttachCommand extends Command
+{
     /**
      * The console command name.
      *
@@ -41,17 +46,13 @@ class AttachCommand extends Command {
         try {
             DB::table($this->argument('table'))->first();
 
-            if (!Schema::hasColumn($this->argument('table'), $this->argument('column')))
-            {
+            if (!Schema::hasColumn($this->argument('table'), $this->argument('column'))) {
                 $this->createMigration();
+            } else {
+                $this->error('Table already contains a column called '.$this->argument('column'));
             }
-            else
-            {
-                $this->error("Table already contains a column called " . $this->argument('column'));
-            }
-
-        } catch(Exception $e) {
-            $this->error("No such table found in database: " . $this->argument('table'));
+        } catch (Exception $e) {
+            $this->error('No such table found in database: '.$this->argument('table'));
         }
     }
 
@@ -62,20 +63,10 @@ class AttachCommand extends Command {
      */
     protected function getArguments()
     {
-        return array(
-            array('table', InputArgument::REQUIRED, 'The name of the database table the Listify field will be added to.'),
-            array('column', InputArgument::OPTIONAL, 'The name of the column to be used by Listify.', 'position')
-        );
-    }
-
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return array();
+        return [
+            ['table', InputArgument::REQUIRED, 'The name of the database table the Listify field will be added to.'],
+            ['column', InputArgument::OPTIONAL, 'The name of the column to be used by Listify.', 'position']
+        ];
     }
 
     /**
@@ -91,16 +82,18 @@ class AttachCommand extends Command {
             'targetTableClassName' => $targetTableClassName,
             'targetColumnClassName' => $targetColumnClassName,
             'tableName' => strtolower($this->argument('table')),
-            'columnName' => strtolower($this->argument('column'))
+            'columnName' => strtolower($this->argument('column')),
         ];
 
         $prefix = date('Y_m_d_His');
-        $path = base_path() . '/database/migrations';
+        $path = base_path().'/database/migrations';
 
-        if (!is_dir($path)) mkdir($path);
+        if (!is_dir($path)) {
+            mkdir($path);
+        }
 
-        $fileName  = $path . '/' . $prefix . '_add_' . $data['columnName'] . '_to_' . $data['tableName'] . '_table.php';
-        $data['className'] = 'Add' . $data['targetColumnClassName'] . 'To' . $data['targetTableClassName'] . 'Table';
+        $fileName  = $path.'/'.$prefix.'_add_'.$data['columnName'].'_to_'.$data['tableName'].'_table.php';
+        $data['className'] = 'Add'.$data['targetColumnClassName'].'To'.$data['targetTableClassName'].'Table';
 
         // Save the new migration to disk using the stapler migration view.
         $migration = View::make('listify::migration', $data)->render();
@@ -109,5 +102,4 @@ class AttachCommand extends Command {
         // Dump the autoloader and print a created migration message to the console.
         $this->info("Created migration: $fileName");
     }
-
 }

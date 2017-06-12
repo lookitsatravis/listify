@@ -2,47 +2,40 @@
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Lookitsatravis\Listify\Listify;
 
 class FooWithQueryBuilderScopeA extends Eloquent
 {
-    use \Lookitsatravis\Listify\Listify;
+    use Listify;
 
-    protected $table ="foo_with_query_builder_scopes";
+    protected $table = 'foo_with_query_builder_scopes';
 
     /**
-     * The fillable array lets laravel know which fields are fillable
+     * The fillable array lets laravel know which fields are fillable.
      *
      * @var array
      */
     protected $fillable = ['name', 'company'];
 
     /**
-     * The rules array lets us know how to to validate this model
+     * The rules array lets us know how to to validate this model.
      *
      * @var array
      */
     public $rules = [
         'name' => 'required',
-        'company' => 'required'
+        'company' => 'required',
     ];
 
     /**
-     * __construct method
+     * Constructor.
      *
-     * @param array   $attributes - An array of attributes to initialize the model with
-     * @param boolean $exists     - Boolean flag to indicate if the model exists or not
+     * @param array $attributes - An array of attributes to initialize the model with
      */
-    public function __construct($attributes = array(), $exists = false)
+    public function __construct($attributes = [])
     {
-        parent::__construct($attributes, $exists);
-        $this->initListify([
-            'scope' => Capsule::table($this->getTable())->where('company', '=', 'ACME')
-        ]);
-    }
+        parent::__construct($attributes);
 
-    public static function boot()
-    {
-        parent::boot();
-        static::bootListify();
+        $this->getListifyConfig()->setScope(Capsule::table($this->getTable())->where('company', '=', 'ACME'));
     }
 }

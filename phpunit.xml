@@ -12,7 +12,7 @@
 >
     <testsuites>
         <testsuite name="Listify Test Suite">
-            <directory suffix=".php" phpVersion="5.4.0" phpVersionOperator=">=">./tests</directory>
+            <directory suffix=".php" phpVersion="5.5.0" phpVersionOperator=">=">./tests</directory>
         </testsuite>
     </testsuites>
 
@@ -22,7 +22,8 @@
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true" addUncoveredFilesFromWhitelist="false">
-            <file>src/Lookitsatravis/Listify/Listify.php</file>
+            <file>src/Listify.php</file>
+            <file>src/Config.php</file>
         </whitelist>
     </filter>
 

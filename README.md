@@ -23,8 +23,8 @@ Listify provides the capabilities for sorting and reordering a number of objects
 
 ## Requirements
 
-* Listify currently requires php >= 5.5 (Listify is implemented via the use of traits).
-* Laravel 5.0 or higher
+* Listify currently requires php >= 5.6
+* Laravel 5.0 or higher (the latest version is recommended)
 
 ## Installation
 

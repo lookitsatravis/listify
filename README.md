@@ -125,7 +125,7 @@ There are a few configuration options available. You'll need to pass these in as
 - `top_of_list` sets the integer position for the top of the list (default: `1`).
 - `column` sets the name of your position column that you chose during installation (default: `'position'`).
 - `add_new_at` sets the name of your position column that you chose during installation (default: `'bottom'`, options: `'top'` or `'bottom'`).
-- `scope` allows you to scope the items in your list. This one requires a bit of elaboration. There are three posible values accepted:
+- `scope` allows you to scope the items in your list. This one requires a bit of elaboration. There are three possible values accepted:
     - `string`
     - `Illuminate\Database\Eloquent\Relations\BelongsTo` object
     - `Illuminate\Database\Query\Builder` object

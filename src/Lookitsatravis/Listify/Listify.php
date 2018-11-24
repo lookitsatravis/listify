@@ -828,13 +828,13 @@ trait Listify
             $this->swappedAttributes = $this->getAttributes();
             $this->fill($this->getOriginal());
             $this->originalAttributesLoaded = TRUE;
+            return ;
         }
-        else
-        {
-            if(count($this->swappedAttributes) == 0) $this->swappedAttributes = $this->getAttributes();
-            $this->fill($this->swappedAttributes);
-            $this->originalAttributesLoaded = FALSE;
-        }
+
+        if(count($this->swappedAttributes) == 0) $this->swappedAttributes = $this->getAttributes();
+        $this->fill($this->swappedAttributes);
+        $this->originalAttributesLoaded = FALSE;
+
     }
 
     /**

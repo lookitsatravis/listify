@@ -843,15 +843,15 @@ trait Listify
      */
     private function checkScope()
     {
-        if($this->hasScopeChanged())
-        {
-            $this->swapChangedAttributes();
-            if($this->lowerItem()) $this->decrementPositionsOnLowerItems();
-            $this->swapChangedAttributes();
-            $this->setListifyPosition(NULL); //make this item "not in the list" so subsequent call to addToListBottom() works (b/c it only operates on items that have no position)
-            $method_name = "addToList" . $this->addNewAt();
-            $this->$method_name();
+        if(! $this->hasScopeChanged()) {
+            return;
         }
+        $this->swapChangedAttributes();
+        if ($this->lowerItem()) $this->decrementPositionsOnLowerItems();
+        $this->swapChangedAttributes();
+        $this->setListifyPosition(null); //make this item "not in the list" so subsequent call to addToListBottom() works (b/c it only operates on items that have no position)
+        $method_name = "addToList".$this->addNewAt();
+        $this->$method_name();
     }
 
     /**

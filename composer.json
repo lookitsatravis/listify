@@ -32,7 +32,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Lookitsatravis\Listify\ListifyServiceProvider"
+                "Lookitsatravis\\Listify\\ListifyServiceProvider"
             ]
         }
     }

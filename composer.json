@@ -28,5 +28,12 @@
     "autoload-dev": {
         "classmap": ["tests/models"]
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Lookitsatravis\Listify\ListifyServiceProvider"
+            ]
+        }
+    }
 }

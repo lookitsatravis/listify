@@ -180,29 +180,26 @@ trait Listify
             $this->stringScopeValue = $theScope;
             return $theScope;
         }
-            if (! is_object($theScope)) {
-                throw new InvalidScopeException('Listify scope parameter must be a String, an Eloquent BelongsTo object, or a Query Builder object.');
-            }
-            $reflector = new \ReflectionClass($theScope);
-            if ($reflector->getName() == 'Illuminate\Database\Eloquent\Relations\BelongsTo') {
-                $relationshipId = $this->getAttribute($theScope->getForeignKey());
+        if (! is_object($theScope)) {
+            throw new InvalidScopeException('Listify scope parameter must be a String, an Eloquent BelongsTo object, or a Query Builder object.');
+        }
+        $reflector = new \ReflectionClass($theScope);
+        if ($reflector->getName() == 'Illuminate\Database\Eloquent\Relations\BelongsTo')
+        {
+            $relationshipId = $this->getAttribute($theScope->getForeignKey());
 
-                if ($relationshipId === null) {
-                    throw new NullForeignKeyException('The Listify scope is a "belongsTo" relationship, but the foreign key is null.');
-                } else {
-                    $theScope = $theScope->getForeignKey().' = '.$this->getAttribute($theScope->getForeignKey());
-                }
-            } else {
-                if ($reflector->getName() == 'Illuminate\Database\Query\Builder') {
-                    $theQuery = $this->getConditionStringFromQueryBuilder($theScope);
-                    $this->stringScopeValue = $theQuery;
-                    $theScope = $theQuery;
-                } else {
-                    throw new InvalidScopeException('Listify scope parameter must be a String, an Eloquent BelongsTo object, or a Query Builder object.');
-                }
+            if ($relationshipId === null) {
+                throw new NullForeignKeyException('The Listify scope is a "belongsTo" relationship, but the foreign key is null.');
             }
 
-            return $theScope;
+            return $theScope->getForeignKey().' = '.$this->getAttribute($theScope->getForeignKey());
+        }
+
+        if ($reflector->getName() != 'Illuminate\Database\Query\Builder') {
+            throw new InvalidScopeException('Listify scope parameter must be a String, an Eloquent BelongsTo object, or a Query Builder object.');
+        }
+
+        return $this->stringScopeValue = $this->getConditionStringFromQueryBuilder($theScope);
     }
 
     /**

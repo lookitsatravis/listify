@@ -41,15 +41,15 @@ trait ScopeCondition
             if ($relationshipId === null) {
                 throw new NullForeignKeyException('The Listify scope is a "belongsTo" relationship, but the foreign key is null.');
             }
-            $theScope = $theScope->getForeignKey().' = '.$this->getAttribute($theScope->getForeignKey());
-            return $theScope;
+
+            return $theScope->getForeignKey().' = '.$this->getAttribute($theScope->getForeignKey());
         }
         if ($reflector->getName() != 'Illuminate\Database\Query\Builder') {
             throw new InvalidScopeException('Listify scope parameter must be a String, an Eloquent BelongsTo object, or a Query Builder object.');
         }
-        $theQuery = $this->getConditionStringFromQueryBuilder($theScope);
+        $theQuery = ( new GetConditionStringFromQueryBuilder())->handle($theScope);
         $this->stringScopeValue = $theQuery;
-        $theScope = $theQuery;
-        return $theScope;
+
+        return $theQuery;
     }
 }

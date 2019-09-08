@@ -9,11 +9,11 @@
         "homepage": "http://lookitsatravis.com"
     }],
     "require": {
-        "php": ">=5.5.0",
-        "illuminate/database": "~5.0",
-        "illuminate/support": "~5.0",
-        "illuminate/console": "~5.0",
-        "illuminate/events": "~5.0"
+        "php": "^7.2",
+        "illuminate/database": "~5.0|~6.0",
+        "illuminate/support": "~5.0|~6.0",
+        "illuminate/console": "~5.0|~6.0",
+        "illuminate/events": "~5.0|~6.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",

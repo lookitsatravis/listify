@@ -2,10 +2,10 @@
 
 class ListifyModelWithBelongstoScopeTest extends ListifyBaseTest
 {
-    protected $model = 'FooWithBelongstoScopeA';
-    protected $modelScopeValue = 'foo_with_belongsto_scope_b_id = 1';
-    private $modelB = 'FooWithBelongstoScopeB';
-    private $modelBScopeValue = 'foo_with_belongsto_scope_b_id = 99';
+    protected $model = FooWithBelongsToScopeAlpha::class;
+    protected $modelScopeValue = 'foo_with_belongs_to_scope_bravo_id = 1';
+    private $modelB = FooWithBelongsToScopeBravo::class;
+    private $modelBScopeValue = 'foo_with_belongs_to_scope_bravo_id = 99';
     private $foreignKeyId;
 
     protected function setUp(): void
@@ -17,7 +17,7 @@ class ListifyModelWithBelongstoScopeTest extends ListifyBaseTest
 
         $this->foreignKeyId = $foo->id;
 
-        $this->belongsToFunction = 'foo_with_belongsto_scope_b';
+        $this->belongsToFunction = 'foo_with_belongs_to_scope_bravo';
         $this->belongsToObject = $foo;
 
         parent::setUp();
@@ -27,7 +27,7 @@ class ListifyModelWithBelongstoScopeTest extends ListifyBaseTest
         for ($i = 1; $i <= 10; $i++) {
             $foo = new $this->model;
             $foo->name = $this->model.'-test-'.$i;
-            $foo->foo_with_belongsto_scope_b_id = 99;
+            $foo->foo_with_belongs_to_scope_bravo_id = 99;
             $foo->save();
         }
     }
@@ -57,18 +57,18 @@ class ListifyModelWithBelongstoScopeTest extends ListifyBaseTest
     {
         $foo1 = new $this->model;
         $foo1->name = $this->model.'Test1';
-        $foo1->foo_with_belongsto_scope_b_id = 19;
+        $foo1->foo_with_belongs_to_scope_bravo_id = 19;
         $foo1->save();
 
         $foo2 = new $this->model;
         $foo2->name = $this->model.'Test2';
-        $foo2->foo_with_belongsto_scope_b_id = 19;
+        $foo2->foo_with_belongs_to_scope_bravo_id = 19;
         $foo2->save();
 
         $this->assertEquals(1, $foo1->getListifyPosition());
         $this->assertEquals(2, $foo2->getListifyPosition());
 
-        $foo1->foo_with_belongsto_scope_b_id = 20;
+        $foo1->foo_with_belongs_to_scope_bravo_id = 20;
         $foo1->save();
 
         $this->assertEquals(1, $foo1->getListifyPosition());
@@ -83,7 +83,7 @@ class ListifyModelWithBelongstoScopeTest extends ListifyBaseTest
 
         $position = 1;
         foreach ($this->foos as $foo) {
-            $this->assertEquals($this->foreignKeyId, $foo->foo_with_belongsto_scope_b_id);
+            $this->assertEquals($this->foreignKeyId, $foo->foo_with_belongs_to_scope_bravo_id);
             $position++;
         }
 

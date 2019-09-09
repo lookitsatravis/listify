@@ -4,7 +4,7 @@ use Lookitsatravis\Listify\Listify;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class FooWithQueryBuilderScopeB extends Eloquent
+class FooWithQueryBuilderScopeBravo extends Eloquent
 {
     use Listify;
 

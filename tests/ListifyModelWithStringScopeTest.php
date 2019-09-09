@@ -2,9 +2,9 @@
 
 class ListifyModelWithStringScopeTest extends ListifyBaseTest
 {
-    protected $model = 'FooWithStringScopeA';
+    protected $model = FooWithStringScopeAlpha::class;
     protected $modelScopeValue = "company = 'companyA'";
-    private $modelB = 'FooWithStringScopeB';
+    private $modelB = FooWithStringScopeBravo::class;
     private $modelBScopeValue = "company = 'companyB'";
 
     protected function setUp(): void

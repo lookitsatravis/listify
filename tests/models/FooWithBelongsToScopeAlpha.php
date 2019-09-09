@@ -1,21 +1,18 @@
 <?php
 
 use Lookitsatravis\Listify\Listify;
-use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class FooWithQueryBuilderScopeA extends Eloquent
+class FooWithBelongsToScopeAlpha extends Eloquent
 {
     use Listify;
-
-    protected $table = 'foo_with_query_builder_scopes';
 
     /**
      * The fillable array lets laravel know which fields are fillable.
      *
      * @var array
      */
-    protected $fillable = ['name', 'company'];
+    protected $fillable = ['name', 'foo_with_belongs_to_scope_bravo_id'];
 
     /**
      * The rules array lets us know how to to validate this model.
@@ -24,7 +21,7 @@ class FooWithQueryBuilderScopeA extends Eloquent
      */
     public $rules = [
         'name' => 'required',
-        'company' => 'required',
+        'foo_with_belongs_to_scope_bravo_id' => 'required',
     ];
 
     /**
@@ -36,6 +33,11 @@ class FooWithQueryBuilderScopeA extends Eloquent
     {
         parent::__construct($attributes);
 
-        $this->getListifyConfig()->setScope(Capsule::table($this->getTable())->where('company', '=', 'ACME'));
+        $this->getListifyConfig()->setScope($this->foo_with_belongs_to_scope_bravo());
+    }
+
+    public function foo_with_belongs_to_scope_bravo()
+    {
+        return $this->belongsTo(FooWithBelongsToScopeBravo::class);
     }
 }

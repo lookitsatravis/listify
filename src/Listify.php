@@ -789,8 +789,9 @@ trait Listify
 
         $reflector = new \ReflectionClass($theScope);
         if ($reflector->getName() == 'Illuminate\Database\Eloquent\Relations\BelongsTo') {
-            $originalVal = $this->getOriginal()[$theScope->getForeignKey()];
-            $currentVal = $this->getAttribute($theScope->getForeignKey());
+            $foreignKey = method_exists($theScope, 'getForeignKey') ? $theScope->getForeignKey() : $theScope->getForeignKeyName();
+            $originalVal = $this->getOriginal()[$foreignKey];
+            $currentVal = $this->getAttribute($foreignKey);
 
             if ($originalVal != $currentVal) {
                 return true;
@@ -831,13 +832,15 @@ trait Listify
             } else {
                 if (is_object($theScope)) {
                     $reflector = new \ReflectionClass($theScope);
+
                     if ($reflector->getName() == 'Illuminate\Database\Eloquent\Relations\BelongsTo') {
-                        $relationshipId = $this->getAttribute($theScope->getForeignKey());
+                        $foreignKey = method_exists($theScope, 'getForeignKey') ? $theScope->getForeignKey() : $theScope->getForeignKeyName();
+                        $relationshipId = $this->getAttribute($foreignKey);
 
                         if ($relationshipId === null) {
                             throw new NullForeignKeyException('The Listify scope is a "belongsTo" relationship, but the foreign key is null.');
                         } else {
-                            $theScope = $theScope->getForeignKey().' = '.$this->getAttribute($theScope->getForeignKey());
+                            $theScope = $foreignKey.' = '.$this->getAttribute($foreignKey);
                         }
                     } elseif ($reflector->getName() == 'Illuminate\Database\Query\Builder') {
                         $this->stringScopeValue = $theScope = $this->getConditionStringFromQueryBuilder($theScope);

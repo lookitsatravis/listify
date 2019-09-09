@@ -505,8 +505,8 @@ class ListifyBaseTest extends TestCase
     {
         Capsule::table('foos')->truncate();
         Capsule::table('foo_with_string_scopes')->truncate();
-        Capsule::table('foo_with_belongsto_scope_as')->truncate();
-        Capsule::table('foo_with_belongsto_scope_bs')->truncate();
+        Capsule::table('foo_with_belongs_to_scope_alphas')->truncate();
+        Capsule::table('foo_with_belongs_to_scope_bravos')->truncate();
         Capsule::table('foo_with_query_builder_scopes')->truncate();
     }
 }

@@ -3,7 +3,7 @@
 use Lookitsatravis\Listify\Listify;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class FooWithStringScopeA extends Eloquent
+class FooWithStringScopeBravo extends Eloquent
 {
     use Listify;
 
@@ -35,6 +35,6 @@ class FooWithStringScopeA extends Eloquent
     {
         parent::__construct($attributes);
 
-        $this->getListifyConfig()->setScope("company = 'companyA'");
+        $this->getListifyConfig()->setScope("company = 'companyB'");
     }
 }

@@ -4,9 +4,9 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 class ListifyModelWithQueryBuilderScopeTest extends ListifyBaseTest
 {
-    protected $model = 'FooWithQueryBuilderScopeA';
+    protected $model = FooWithQueryBuilderScopeAlpha::class;
     protected $modelScopeValue = "company = 'ACME'";
-    private $modelB = 'FooWithQueryBuilderScopeB';
+    private $modelB = FooWithQueryBuilderScopeBravo::class;
     private $modelBScopeValue = "company = 'NOT_ACME'";
 
     protected function setUp(): void

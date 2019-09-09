@@ -23,7 +23,7 @@ Listify provides the capabilities for sorting and reordering a number of objects
 
 ## Requirements
 
-* Listify currently requires php >= 5.6
+* Listify currently requires php >= 7.2
 * Laravel 5.0 or higher (the latest version is recommended)
 
 ## Installation
@@ -31,6 +31,10 @@ Listify provides the capabilities for sorting and reordering a number of objects
 Simply require Listify in composer.
 
 `composer require lookitsatravis/listify`
+
+### Laravel >= 5.5
+
+Listify will [automatically register](https://medium.com/@taylorotwell/package-auto-discovery-in-laravel-5-5-ea9e3ab20518) with Laravel.
 
 ### Laravel < 5.5
 
@@ -45,10 +49,6 @@ Once this operation completes, the final step is to add the service provider. Op
     ...
 ];
 ```
-
-### Laravel >= 5.5
-
-Listify will [automatically register](https://medium.com/@taylorotwell/package-auto-discovery-in-laravel-5-5-ea9e3ab20518) with Laravel.
 
 ## Quickstart
 
@@ -267,4 +267,4 @@ Aside from that, I hope to just keep in parity with the Ruby gem `acts_as_list` 
 
 ## Copyright
 
-Copyright (c) 2013-2017 Travis Vignon, released under the MIT license
+Copyright (c) 2013-2019 Travis Vignon, released under the MIT license

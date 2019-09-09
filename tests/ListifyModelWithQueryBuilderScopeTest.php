@@ -9,7 +9,7 @@ class ListifyModelWithQueryBuilderScopeTest extends ListifyBaseTest
     private $modelB = 'FooWithQueryBuilderScopeB';
     private $modelBScopeValue = "company = 'NOT_ACME'";
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -27,7 +27,7 @@ class ListifyModelWithQueryBuilderScopeTest extends ListifyBaseTest
         $this->reloadBFoos();
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -35,11 +35,10 @@ class ListifyModelWithQueryBuilderScopeTest extends ListifyBaseTest
         $modelB::flushEventListeners();
     }
 
-    /**
-     * @expectedException \Lookitsatravis\Listify\Exceptions\InvalidQueryBuilderException
-     */
     public function test_passScopeInWithMissingWhere()
     {
+        $this->expectException(\Lookitsatravis\Listify\Exceptions\InvalidQueryBuilderException::class);
+
         $foo = new $this->model;
         $foo->name = $this->model.'New';
         $foo->getListifyConfig()->setScope(Capsule::table('foos')->orderBy('id ASC'));

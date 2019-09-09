@@ -8,7 +8,7 @@ class ListifyModelWithBelongstoScopeTest extends ListifyBaseTest
     private $modelBScopeValue = 'foo_with_belongsto_scope_b_id = 99';
     private $foreignKeyId;
 
-    public function setUp()
+    protected function setUp(): void
     {
         //This is the record that model A will belong to in order to test the scope
         $foo = new $this->modelB;
@@ -32,11 +32,10 @@ class ListifyModelWithBelongstoScopeTest extends ListifyBaseTest
         }
     }
 
-    /**
-     * @expectedException \Lookitsatravis\Listify\Exceptions\NullScopeException
-     */
     public function test_passInNullScopeThrowsError()
     {
+        $this->expectException(\Lookitsatravis\Listify\Exceptions\NullScopeException::class);
+
         $model = $this->model;
         $foo = new $model();
         $foo->name = 'FooHasNullScope';
@@ -44,11 +43,10 @@ class ListifyModelWithBelongstoScopeTest extends ListifyBaseTest
         $foo->save();
     }
 
-    /**
-     * @expectedException \Lookitsatravis\Listify\Exceptions\NullForeignKeyException
-     */
     public function test_passInNullScopeWithForeignKeyThrowsError()
     {
+        $this->expectException(\Lookitsatravis\Listify\Exceptions\NullForeignKeyException::class);
+
         $model = $this->model;
         $foo = new $model();
         $foo->name = 'FooHasNoForeignKey';

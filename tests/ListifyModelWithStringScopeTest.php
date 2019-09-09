@@ -7,7 +7,7 @@ class ListifyModelWithStringScopeTest extends ListifyBaseTest
     private $modelB = 'FooWithStringScopeB';
     private $modelBScopeValue = "company = 'companyB'";
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -25,7 +25,7 @@ class ListifyModelWithStringScopeTest extends ListifyBaseTest
         $this->reloadBFoos();
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

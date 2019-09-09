@@ -10,10 +10,8 @@ class ListifyBaseTest extends TestCase
     protected $belongsToFunction = null;
     protected $belongsToObject = null;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-
         $this->reloadDatabase();
 
         // Allows model events to work during testing
@@ -36,10 +34,8 @@ class ListifyBaseTest extends TestCase
         $this->reloadFoos();
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
-        parent::tearDown();
-
         $model = $this->model;
         $model::flushEventListeners();
     }
@@ -474,11 +470,10 @@ class ListifyBaseTest extends TestCase
         $this->assertEquals(1, $foo->getListifyPosition());
     }
 
-    /**
-     * @expectedException \Lookitsatravis\Listify\Exceptions\InvalidScopeException
-     */
     public function test_invalidScopeExceptionNonObject()
     {
+        $this->expectException(\Lookitsatravis\Listify\Exceptions\InvalidScopeException::class);
+
         $foo = $this->model;
         $foo = new $foo();
         $foo->name = $this->model.'Test';
@@ -486,11 +481,10 @@ class ListifyBaseTest extends TestCase
         $foo->save();
     }
 
-    /**
-     * @expectedException \Lookitsatravis\Listify\Exceptions\InvalidScopeException
-     */
     public function test_invalidScopeExceptionObject()
     {
+        $this->expectException(\Lookitsatravis\Listify\Exceptions\InvalidScopeException::class);
+
         $foo = $this->model;
         $foo = new $foo();
         $foo->name = $this->model.'Test';

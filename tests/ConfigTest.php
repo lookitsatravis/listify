@@ -7,7 +7,7 @@ class ConfigTest extends TestCase
 {
     protected $config;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -21,11 +21,9 @@ class ConfigTest extends TestCase
         $this->assertEquals(0, $this->config->getTopPositionInList());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function test_invalidPositionThrowsWhenSettingTopPosition()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->config->setTopPositionInList('foo');
     }
 
@@ -50,19 +48,16 @@ class ConfigTest extends TestCase
         $this->assertEquals(Config::POSITION_TOP, $this->config->getAddNewItemTo());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function test_invalidPositionThrowsWhenSettingAddNewItemTo()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->config->setAddNewItemTo('something');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function test_assertKeyIsValid()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         // Grab ahold of the method and change its accessibility.
         $method = new \ReflectionMethod('\Lookitsatravis\Listify\Config', 'assertKeyIsValid');
         $method->setAccessible(true);

@@ -15,5 +15,5 @@ script:
   - mkdir -p build/logs
   - vendor/bin/phpunit
 
-after_script:
-  - php vendor/bin/coveralls
+after_success:
+  - travis_retry php vendor/bin/php-coveralls -v

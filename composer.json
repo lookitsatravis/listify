@@ -28,6 +28,9 @@
         "classmap": ["tests/models"]
     },
     "minimum-stability": "stable",
+    "config": {
+        "discard-changes": true
+    },
     "extra": {
         "laravel": {
             "providers": [

@@ -14,8 +14,6 @@ class ListifyServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__.'/../../views', 'listify');
-
         if ($this->app->runningInConsole()) {
             $this->commands([
                 AttachCommand::class,

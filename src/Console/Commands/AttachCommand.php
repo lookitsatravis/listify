@@ -1,23 +1,15 @@
 <?php
 
-namespace Lookitsatravis\Listify\Commands;
+namespace Lookitsatravis\Listify\Console\Commands;
 
+use Exception;
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\View;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Schema;
-use Symfony\Component\Console\Input\InputArgument;
 
 class AttachCommand extends Command
 {
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'listify:attach';
-
     /**
      * The console command description.
      *
@@ -26,13 +18,31 @@ class AttachCommand extends Command
     protected $description = 'Generate a migration for adding position to a database table.';
 
     /**
+     * The filesystem instance.
+     *
+     * @var \Illuminate\Filesystem\Filesystem
+     */
+    protected $files;
+
+    /**
+     * The console command name.
+     *
+     * @var string
+     */
+    protected $signature = 'listify:attach
+                        {table : The name of the database table the Listify field will be added to.}
+                        {column=position : The name of the column to be used by Listify.}';
+
+    /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Filesystem $files)
     {
         parent::__construct();
+
+        $this->files = $files;
     }
 
     /**
@@ -40,32 +50,27 @@ class AttachCommand extends Command
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         try {
-            DB::table($this->argument('table'))->first();
-
-            if (! Schema::hasColumn($this->argument('table'), $this->argument('column'))) {
-                $this->createMigration();
-            } else {
-                $this->error('Table already contains a column called '.$this->argument('column'));
+            if ($this->shouldCreateMigration()) {
+                return $this->createMigration();
             }
+
+            $this->error('Table already contains a column called '.$this->argument('column'));
         } catch (Exception $e) {
             $this->error('No such table found in database: '.$this->argument('table'));
         }
     }
 
     /**
-     * Get the console command arguments.
+     * Get the path to the stubs.
      *
-     * @return array
+     * @return string
      */
-    protected function getArguments()
+    public function stubPath()
     {
-        return [
-            ['table', InputArgument::REQUIRED, 'The name of the database table the Listify field will be added to.'],
-            ['column', InputArgument::OPTIONAL, 'The name of the column to be used by Listify.', 'position'],
-        ];
+        return __DIR__.'/stubs';
     }
 
     /**
@@ -73,32 +78,88 @@ class AttachCommand extends Command
      *
      * @return void
      */
-    public function createMigration()
+    protected function createMigration(): void
     {
-        $targetTableClassName = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->argument('table'))));
-        $targetColumnClassName = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->argument('column'))));
-        $data = [
-            'targetTableClassName' => $targetTableClassName,
-            'targetColumnClassName' => $targetColumnClassName,
-            'tableName' => strtolower($this->argument('table')),
-            'columnName' => strtolower($this->argument('column')),
-        ];
+        $fileName = $this->getMigrationFileName(
+            $className = $this->getClassName()
+        );
 
-        $prefix = date('Y_m_d_His');
-        $path = base_path().'/database/migrations';
+        $file = str_replace('DummyClass', $className, $this->getStub());
+        $file = str_replace('DummyTable', $this->getTableName(), $file);
+        $file = str_replace('DummyColumn', $this->getColumnName(), $file);
 
-        if (! is_dir($path)) {
-            mkdir($path);
-        }
+        $this->files->put($fileName, $file);
 
-        $fileName = $path.'/'.$prefix.'_add_'.$data['columnName'].'_to_'.$data['tableName'].'_table.php';
-        $data['className'] = 'Add'.$data['targetColumnClassName'].'To'.$data['targetTableClassName'].'Table';
+        $this->info("Migration created: {$fileName}");
+    }
 
-        // Save the new migration to disk using the stapler migration view.
-        $migration = View::make('listify::migration', $data)->render();
-        File::put($fileName, $migration);
+    /**
+     * Get the migration class name to generate.
+     *
+     * @return string
+     */
+    protected function getClassName()
+    {
+        $table = $this->getTableName();
+        $column = $this->getColumnName();
 
-        // Dump the autoloader and print a created migration message to the console.
-        $this->info("Created migration: $fileName");
+        return Str::studly("add_{$column}_to_{$table}");
+    }
+
+    /**
+     * Get the database table column's name.
+     *
+     * @return void
+     */
+    protected function getColumnName()
+    {
+        return Str::snake($this->argument('column'));
+    }
+
+    /**
+     * Get the migration file name.
+     *
+     * @param string $className
+     * @return string
+     */
+    protected function getMigrationFileName($className)
+    {
+        $now = date('Y_m_d_His');
+
+        $file = $now.'_'.Str::snake($className);
+
+        $path = $this->laravel->databasePath('migrations');
+
+        return "{$path}/{$file}.php";
+    }
+
+    /**
+     * Get the migration file stub.
+     *
+     * @return string
+     */
+    protected function getStub()
+    {
+        return $this->files->get($this->stubPath().'/migration.stub');
+    }
+
+    /**
+     * Get the database table name.
+     *
+     * @return string
+     */
+    protected function getTableName()
+    {
+        return Str::snake($this->argument('table'));
+    }
+
+    /**
+     * Determine if a new migration should be generated.
+     *
+     * @return bool
+     */
+    protected function shouldCreateMigration()
+    {
+        return ! Schema::hasColumn($this->getTableName(), $this->getColumnName());
     }
 }

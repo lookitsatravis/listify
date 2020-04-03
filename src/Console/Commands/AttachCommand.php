@@ -3,10 +3,10 @@
 namespace Lookitsatravis\Listify\Console\Commands;
 
 use Exception;
-use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class AttachCommand extends Command
 {

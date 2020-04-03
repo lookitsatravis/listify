@@ -2,10 +2,10 @@
 
 namespace Lookitsatravis\Listify;
 
-use Lookitsatravis\Listify\Exceptions\NullScopeException;
+use Lookitsatravis\Listify\Exceptions\InvalidQueryBuilderException;
 use Lookitsatravis\Listify\Exceptions\InvalidScopeException;
 use Lookitsatravis\Listify\Exceptions\NullForeignKeyException;
-use Lookitsatravis\Listify\Exceptions\InvalidQueryBuilderException;
+use Lookitsatravis\Listify\Exceptions\NullScopeException;
 
 /**
  * Gives some nice sorting features to a model.

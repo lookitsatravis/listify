@@ -103,7 +103,7 @@ $fixers = [
         ],
         'sortAlgorithm' => 'alpha',
     ],
-    'ordered_imports'                     => ['sortAlgorithm' => 'length'],
+    'ordered_imports'                     => ['sortAlgorithm' => 'alpha'],
     'php_unit_method_casing'              => ['case' => 'snake_case'],
     'phpdoc_add_missing_param_annotation' => true,
     'phpdoc_indent'                       => true,

@@ -9,7 +9,8 @@ php:
 env:
   - LARAVEL_VERSION=5.5.*
   - LARAVEL_VERSION=5.8.*
-  - LARAVEL_VERSION=6.0.*
+  - LARAVEL_VERSION=6.*
+  - LARAVEL_VERSION=7.*
 
 matrix:
   fast_finish: true

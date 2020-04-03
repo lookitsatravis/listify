@@ -68,7 +68,7 @@ class AttachCommand extends Command
      *
      * @return string
      */
-    public function stubPath()
+    protected function stubPath()
     {
         return __DIR__.'/stubs';
     }

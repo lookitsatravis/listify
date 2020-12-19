@@ -292,15 +292,8 @@ trait Listify
         }
 
         $this->getConnection()->transaction(function (): void {
-            $higherItem = $this->higherItem();
-            
-            $higherItem->withoutEvents(function () use ($higherItem) {
-                $higherItem->increment($this->getPositionColumnName());
-            });
-            
-            $this->withoutEvents(function () {
-                $this->decrement($this->getPositionColumnName());
-             });
+            $this->higherItem()->increment($this->getPositionColumnName());
+            $this->decrement($this->getPositionColumnName());
         });
 
         return $this;
@@ -318,15 +311,8 @@ trait Listify
         }
 
         $this->getConnection()->transaction(function (): void {
-            $lowerItem = $this->lowerItem();
-            
-            $lowerItem->withoutEvents(function () use ($lowerItem) {
-                $lowerItem->decrement($this->getPositionColumnName());    
-            });
-            
-            $this->withoutEvents(function () {
-               $this->increment($this->getPositionColumnName()); 
-            });
+            $this->lowerItem()->decrement($this->getPositionColumnName());
+            $this->increment($this->getPositionColumnName());
         });
 
         return $this;

@@ -1,6 +1,11 @@
-# Listify
+# Listify (Inactive)
 
 Turn any Eloquent model into a list!
+
+| :zap:        Inactivity Notice ⚠️   |
+|-----------------------------------------|
+
+Thanks for your interest. I no longer use PHP or Laravel and do not have the bandwidth to maintain this package.
 
 ## Description
 
